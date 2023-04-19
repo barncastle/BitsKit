@@ -109,32 +109,23 @@ public static partial class BitPrimitives
         destination |= value;
     }
 
-    private static void WriteValue128(ref UInt128 destination, int bitOffset, UInt128 value, int bitCount, BitOrder bitOrder)
+    private static void WriteValue128(ref ulong destination, int bitOffset, ulong value, int bitCount, BitOrder bitOrder)
     {
-        if (bitCount == 0)
-            return;
+        // benchmarking shows that splitting this into two ulong writes
+        // is ~2x faster than using UInt128 - a whopping(!) 50 to 180ns..
 
-        // create the mask
-        UInt128 mask = UInt128.MaxValue >> (128 - bitCount);
-
-        // truncate the value
-        value &= mask;
+        int countHi = 64 - bitOffset;
+        int countLo = bitCount - countHi;
 
         if (bitOrder == BitOrder.LeastSignificant)
         {
-            // align to the correct bit
-            mask <<= bitOffset;
-            value <<= bitOffset;
+            WriteValue64(ref destination, bitOffset, value, countHi, bitOrder);
+            WriteValue64(ref Unsafe.Add(ref destination, 1), 0, value >> countLo, countLo, bitOrder);
         }
         else
         {
-            // align the mask and reverse it's bit order
-            mask = ReverseBitOrder(mask << bitOffset);
-            // align the value to the opposite significant bit and reverse it's endianness
-            value = UInt128Helper.ReverseEndianness(value << (128 - bitCount - bitOffset));
+            WriteValue64(ref destination, bitOffset, value >> countLo, countHi, bitOrder);
+            WriteValue64(ref Unsafe.Add(ref destination, 1), 0, value, countLo, bitOrder);
         }
-
-        destination &= ~mask;
-        destination |= value;
     }
 }

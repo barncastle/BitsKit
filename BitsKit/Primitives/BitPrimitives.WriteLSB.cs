@@ -217,16 +217,12 @@ public static partial class BitPrimitives
     {
         ValidateArgs(destination.Length * 8, bitOffset, bitCount, 64);
 
+        ref ulong target = ref Unsafe.As<byte, ulong>(ref destination[bitOffset >> 3]);
+
         if (bitCount + (bitOffset & 7) > 64)
-        {
-            ref UInt128 target = ref Unsafe.As<byte, UInt128>(ref destination[bitOffset >> 3]);
             WriteValue128(ref target, bitOffset & 7, value, bitCount, BitOrder.LeastSignificant);
-        }
         else
-        {
-            ref ulong target = ref Unsafe.As<byte, ulong>(ref destination[bitOffset >> 3]);
             WriteValue64(ref target, bitOffset & 7, value, bitCount, BitOrder.LeastSignificant);
-        }
     }
 
     /// <summary>
