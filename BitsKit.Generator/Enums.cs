@@ -30,6 +30,7 @@ internal enum BitFieldType
     UInt64,
     IntPtr,
     UIntPtr,
+    Boolean,
 
     /// <summary>
     /// Blocks out a set of bits
