@@ -18,6 +18,7 @@ internal sealed class BitFieldModel
     public BitOrder BitOrder { get; set; }
     public bool ReverseBitOrder { get; }
     public BitFieldModifiers Modifiers { get; }
+    public bool IsBoolean { get; }
 
     public BitFieldModel(AttributeData attributeData)
     {
@@ -52,6 +53,9 @@ internal sealed class BitFieldModel
 
         if (string.IsNullOrEmpty(Name))
             FieldType = BitFieldType.Padding;
+
+        if (FieldType == BitFieldType.Boolean)
+            IsBoolean = true;
     }
 
     public void GenerateCSharpSource(StringBuilder sb)
@@ -69,7 +73,7 @@ internal sealed class BitFieldModel
             GetPropertyTemplate(),
             accessor,
             Modifiers.HasFlag(BitFieldModifiers.Required) ? "required" : "",
-            FieldType,
+            IsBoolean ? BitFieldType.Boolean : FieldType,
             Name)
           .AppendIndentedLine(2, "{");
 
@@ -146,7 +150,14 @@ internal sealed class BitFieldModel
             _ => throw new NotSupportedException()
         };
 
-        return string.Format(StringConstants.IntegralGetterTemplate, source);
+        string getter = (BackingType, IsBoolean) switch
+        {
+            { IsBoolean: false } => StringConstants.IntegralGetterTemplate,
+            { BackingType: BackingType.Integral } => StringConstants.BooleanGetterTemplate,
+            { BackingType: not BackingType.Integral } => StringConstants.BooleanSpanGetterTemplate,
+        };
+
+        return string.Format(getter, source);
     }
 
     /// <summary>
@@ -172,7 +183,14 @@ internal sealed class BitFieldModel
             _ => throw new NotSupportedException()
         };
 
-        return string.Format(StringConstants.IntegralSetterTemplate, source);
+        string setter = (BackingType, IsBoolean) switch
+        {
+            { IsBoolean: false } => StringConstants.IntegralSetterTemplate,
+            { BackingType: BackingType.Integral } => StringConstants.BooleanSetterTemplate,
+            { BackingType: not BackingType.Integral } => StringConstants.BooleanSpanSetterTemplate,
+        };
+
+        return string.Format(setter, source, FieldType);
     }
 
     /// <summary>

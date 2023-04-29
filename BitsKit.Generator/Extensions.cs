@@ -72,7 +72,8 @@ internal static class Extensions
         BitFieldType.Int64 or
         BitFieldType.UInt64 or
         BitFieldType.IntPtr or
-        BitFieldType.UIntPtr => type.ToString(),
+        BitFieldType.UIntPtr or
+        BitFieldType.Boolean => type.ToString(),
         _ => throw new NotSupportedException()
     };
 
