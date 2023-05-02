@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Profile 1": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\BitsKit.Generator.Tests\\BitsKit.Generator.Tests.csproj"
+    }
+  }
+}
