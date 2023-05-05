@@ -71,8 +71,8 @@ public partial struct BitFieldMemoryStruct
     [BitField("Generated04", 2, BitFieldType.Int16)]
     public ReadOnlyMemory<byte> BackingField01;
 
-    public int IntValue00 => Unsafe.ReadUnaligned<int>(ref BackingField00.Span[0]);
-    public int IntValue01 => Unsafe.ReadUnaligned<int>(ref Unsafe.AsRef(BackingField01.Span[0]));
+    public int IntValue00 => MemoryMarshal.Read<int>(BackingField00.Span);
+    public int IntValue01 => MemoryMarshal.Read<int>(BackingField01.Span);
 }
 
 [BitObject(BitOrder.LeastSignificant)]
@@ -86,8 +86,8 @@ public ref partial struct BitFieldRefStruct
     [BitField("Generated04", 2, BitFieldType.Int16)]
     public ReadOnlySpan<byte> BackingField01;
 
-    public int IntValue00 => Unsafe.ReadUnaligned<int>(ref BackingField00[0]);
-    public int IntValue01 => Unsafe.ReadUnaligned<int>(ref Unsafe.AsRef(BackingField01[0]));
+    public int IntValue00 => MemoryMarshal.Read<int>(BackingField00);
+    public int IntValue01 => MemoryMarshal.Read<int>(BackingField01);
 }
 
 [BitObject(BitOrder.LeastSignificant)]
