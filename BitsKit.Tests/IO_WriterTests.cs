@@ -247,7 +247,7 @@ public class IO_WriterTests
         memoryBitWriter.Position = bitOffset;
         bitStreamWriter.Position = bitOffset;
 
-        bitWriter.WriteBitLSB(true);
+        bitWriter.WriteBitMSB(true);
         memoryBitWriter.WriteBitMSB(true);
         bitStreamWriter.WriteBitMSB(true);
 
