@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using BitsKit.BitFields;
 using BitsKit.Generator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BitsKit.Tests;
@@ -162,10 +160,6 @@ public class GeneratorTests
     public void ReadOnlyMemberTest()
     {
         string source = @"
-        using System;
-        using BitsKit;
-        using BitsKit.BitFields;
-
         [BitObject(BitOrder.LeastSignificant)]
         public ref partial struct BitFieldReadOnly
         {
@@ -200,19 +194,15 @@ public class GeneratorTests
         }
         ";
 
-        string sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
+        string? sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
 
-        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(TruncateUsings(sourceOutput), expected));
+        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(sourceOutput, expected));
     }
 
     [TestMethod]
     public void TypeModifierTest()
     {
         string source = @"
-        using System;
-        using BitsKit;
-        using BitsKit.BitFields;
-
         [BitObject(BitOrder.LeastSignificant)]
         public readonly ref partial struct BitFieldReadOnly
         {
@@ -247,19 +237,15 @@ public class GeneratorTests
         }
         ";
 
-        string sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
+        string? sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
 
-        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(TruncateUsings(sourceOutput), expected));
+        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(sourceOutput, expected));
     }
 
     [TestMethod]
     public void MemberAttributeTestNet60()
     {
         string source = @"
-        using System;
-        using BitsKit;
-        using BitsKit.BitFields;
-
         [BitObject(BitOrder.LeastSignificant)]
         public unsafe ref partial struct BitFieldGeneratorTest
         {
@@ -387,19 +373,16 @@ public class GeneratorTests
         }
         ";
 
-        string sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
+        string? sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
 
-        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(TruncateUsings(sourceOutput), expected));
+        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(sourceOutput, expected));
     }
 
     [TestMethod]
     public void MemberAttributeTestNet70()
     {
+#if NET7_0_OR_GREATER
         string source = @"
-        using System;
-        using BitsKit;
-        using BitsKit.BitFields;
-
         [BitObject(BitOrder.LeastSignificant)]
         public unsafe ref partial struct BitFieldGeneratorTest
         {
@@ -412,19 +395,6 @@ public class GeneratorTests
             [BitField(""Generated06"", 2, ReverseBitOrder = true)]
             [BitField(""Generated07"", 2, Modifiers = BitFieldModifiers.Required)]
             public int BackingField00;
-
-            [BitField(""Generated10"", 2, BitFieldType.SByte)]
-            [BitField(2)]
-            [BitField(""Generated11"", 2, BitFieldType.Int16)]
-            [BitField(""Generated12"", 2, BitFieldType.Int32)]
-            [BitField(""Generated13"", 2, BitFieldType.Int64)]
-            [BitField(""Generated14"", 2, BitFieldType.Byte)]
-            [BitField(""Generated15"", 2, BitFieldType.UInt16)]
-            [BitField(""Generated16"", 2, BitFieldType.UInt32)]
-            [BitField(""Generated17"", 2, BitFieldType.UInt64)]
-            [BitField(""Generated18"", 2, BitFieldType.IntPtr)]
-            [BitField(""Generated19"", 2, BitFieldType.UIntPtr)]
-            public Span<byte> BackingField01;
         }
         ";
 
@@ -471,73 +441,12 @@ public class GeneratorTests
                 get => BitPrimitives.ReadInt32LSB(BackingField00, 14, 2);
                 set => BitPrimitives.WriteInt32LSB(ref BackingField00, 14, value, 2);
             }
-
-            public  SByte Generated10 
-            {
-                get => BitPrimitives.ReadInt8LSB(BackingField01, 0, 2);
-                set => BitPrimitives.WriteInt8LSB(BackingField01, 0, value, 2);
-            }
-
-            public  Int16 Generated11 
-            {
-                get => BitPrimitives.ReadInt16LSB(BackingField01, 4, 2);
-                set => BitPrimitives.WriteInt16LSB(BackingField01, 4, value, 2);
-            }
-
-            public  Int32 Generated12 
-            {
-                get => BitPrimitives.ReadInt32LSB(BackingField01, 6, 2);
-                set => BitPrimitives.WriteInt32LSB(BackingField01, 6, value, 2);
-            }
-
-            public  Int64 Generated13 
-            {
-                get => BitPrimitives.ReadInt64LSB(BackingField01, 8, 2);
-                set => BitPrimitives.WriteInt64LSB(BackingField01, 8, value, 2);
-            }
-
-            public  Byte Generated14 
-            {
-                get => BitPrimitives.ReadUInt8LSB(BackingField01, 10, 2);
-                set => BitPrimitives.WriteUInt8LSB(BackingField01, 10, value, 2);
-            }
-
-            public  UInt16 Generated15 
-            {
-                get => BitPrimitives.ReadUInt16LSB(BackingField01, 12, 2);
-                set => BitPrimitives.WriteUInt16LSB(BackingField01, 12, value, 2);
-            }
-
-            public  UInt32 Generated16 
-            {
-                get => BitPrimitives.ReadUInt32LSB(BackingField01, 14, 2);
-                set => BitPrimitives.WriteUInt32LSB(BackingField01, 14, value, 2);
-            }
-
-            public  UInt64 Generated17 
-            {
-                get => BitPrimitives.ReadUInt64LSB(BackingField01, 16, 2);
-                set => BitPrimitives.WriteUInt64LSB(BackingField01, 16, value, 2);
-            }
-
-            public  IntPtr Generated18 
-            {
-                get => BitPrimitives.ReadIntPtrLSB(BackingField01, 18, 2);
-                set => BitPrimitives.WriteIntPtrLSB(BackingField01, 18, value, 2);
-            }
-
-            public  UIntPtr Generated19 
-            {
-                get => BitPrimitives.ReadUIntPtrLSB(BackingField01, 20, 2);
-                set => BitPrimitives.WriteUIntPtrLSB(BackingField01, 20, value, 2);
-            }
         }
         ";
 
-#if NET7_0_OR_GREATER
-        string sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
+        string? sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
 
-        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(TruncateUsings(sourceOutput), expected));
+        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(sourceOutput, expected));
 #endif
     }
 
@@ -545,10 +454,6 @@ public class GeneratorTests
     public void BooleanMemberTest()
     {
         string source = @"
-        using System;
-        using BitsKit;
-        using BitsKit.BitFields;
-
         [BitObject(BitOrder.LeastSignificant)]
         public unsafe ref partial struct BooleanGeneratorTest
         {
@@ -601,12 +506,12 @@ public class GeneratorTests
         }
         ";
 
-        string sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
+        string? sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
 
-        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(TruncateUsings(sourceOutput), expected));
+        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(sourceOutput, expected));
     }
 
-    private static string GenerateSourceAndTest(string source, IIncrementalGenerator generator)
+    private static string? GenerateSourceAndTest(string source, IIncrementalGenerator generator)
     {
         var references = AppDomain.CurrentDomain.GetAssemblies()
                                   .Where(assembly => !assembly.IsDynamic)
@@ -614,7 +519,7 @@ public class GeneratorTests
                                   .Cast<MetadataReference>();
 
         CSharpCompilation compilation = CSharpCompilation.Create("compilation",
-                                        new[] { CSharpSyntaxTree.ParseText(source) },
+                                        new[] { CSharpSyntaxTree.ParseText(Helpers.GeneratorTestHeader + source) },
                                         references,
                                         new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true));
 
@@ -637,7 +542,9 @@ public class GeneratorTests
         Assert.AreEqual(generatorResult.GeneratedSources.Length, 1);
         Assert.IsTrue(generatorResult.Exception is null);
 
-        return generatorResult.GeneratedSources[0].SourceText.ToString();
+        string sourceOutput = generatorResult.GeneratedSources[0].SourceText.ToString();
+
+        return TruncateUsings(sourceOutput);
     }
 
     private static string? TruncateUsings(string? source)

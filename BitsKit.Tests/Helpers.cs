@@ -14,6 +14,17 @@ public static class Helpers
 {
     private static readonly Regex RemoveWhiteSpaceRegex = new("\\s", RegexOptions.Compiled);
 
+    public const string GeneratorTestHeader = @"
+    #pragma warning disable IDE0005 // Using directive is unnecessary
+    #pragma warning disable IDE0005_gen // Using directive is unnecessary
+    #pragma warning disable CS8019  // Unnecessary using directive.
+    #pragma warning disable IDE0161 // Convert to file-scoped namespace
+    
+    using System;
+    using BitsKit;
+    using BitsKit.BitFields;
+    ";
+
     public static ulong ReadBitsLSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         ulong result = 0;
