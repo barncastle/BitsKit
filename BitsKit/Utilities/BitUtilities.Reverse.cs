@@ -80,7 +80,8 @@ public static partial class BitUtilities
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong ReverseBits(ulong value)
     {
-        // two uint reverses is significantly faster
+        // 32 bit operations have higher throughput than 64 bit
+
         ulong hi = ReverseBits((uint)(value >> 0x00));
         ulong lo = ReverseBits((uint)(value >> 0x20));
 

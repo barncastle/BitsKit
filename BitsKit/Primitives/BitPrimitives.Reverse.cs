@@ -83,7 +83,8 @@ public partial class BitPrimitives
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong ReverseBitOrder(ulong value)
     {
-        // two uint reverses is significantly faster
+        // 32 bit operations have higher throughput than 64 bit
+
         ulong lo = ReverseBitOrder((uint)(value >> 0x00));
         ulong hi = ReverseBitOrder((uint)(value >> 0x20));
 
