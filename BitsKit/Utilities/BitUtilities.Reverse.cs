@@ -80,20 +80,11 @@ public static partial class BitUtilities
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong ReverseBits(ulong value)
     {
-        // swap odd and even bits
-        value = ((value >> 1) & 0x5555555555555555) | ((value & 0x5555555555555555) << 1);
-        // swap consecutive pairs
-        value = ((value >> 2) & 0x3333333333333333) | ((value & 0x3333333333333333) << 2);
-        // swap nibbles 
-        value = ((value >> 4) & 0x0F0F0F0F0F0F0F0F) | ((value & 0x0F0F0F0F0F0F0F0F) << 4);
-        // swap bytes
-        value = ((value >> 8) & 0x00FF00FF00FF00FF) | ((value & 0x00FF00FF00FF00FF) << 8);
-        // swap 2-byte long pairs
-        value = ((value >> 16) & 0x0000FFFF0000FFFF) | ((value & 0x0000FFFF0000FFFF) << 16);
-        // swap 4-byte long pairs
-        value = (value >> 32) | (value << 32);
+        // two uint reverses is significantly faster
+        ulong hi = ReverseBits((uint)(value >> 0x00));
+        ulong lo = ReverseBits((uint)(value >> 0x20));
 
-        return value;
+        return (hi << 32) | lo;
     }
 
     /// <inheritdoc cref="ReverseBits(sbyte)"/>

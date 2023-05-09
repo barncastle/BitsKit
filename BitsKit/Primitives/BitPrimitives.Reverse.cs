@@ -83,14 +83,11 @@ public partial class BitPrimitives
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong ReverseBitOrder(ulong value)
     {
-        // swap odd and even bits
-        value = ((value >> 1) & 0x5555555555555555) | ((value & 0x5555555555555555) << 1);
-        // swap consecutive pairs
-        value = ((value >> 2) & 0x3333333333333333) | ((value & 0x3333333333333333) << 2);
-        // swap nibbles 
-        value = ((value >> 4) & 0x0F0F0F0F0F0F0F0F) | ((value & 0x0F0F0F0F0F0F0F0F) << 4);
+        // two uint reverses is significantly faster
+        ulong lo = ReverseBitOrder((uint)(value >> 0x00));
+        ulong hi = ReverseBitOrder((uint)(value >> 0x20));
 
-        return value;
+        return (hi << 32) | lo;
     }
 
     /// <inheritdoc cref="ReverseBitOrder(sbyte)"/>
