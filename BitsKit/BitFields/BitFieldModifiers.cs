@@ -1,7 +1,7 @@
 ﻿namespace BitsKit.BitFields;
 
 /// <summary>
-/// Modifiers that change the generated source code of a bit-field
+/// An enumeration listing all of the options to modify bit-field generation
 /// </summary>
 [Flags]
 public enum BitFieldModifiers

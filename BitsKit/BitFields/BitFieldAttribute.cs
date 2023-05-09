@@ -1,14 +1,18 @@
 ﻿namespace BitsKit.BitFields;
 
-/// <summary>Attribute that defines each bitfield to be generated.</summary>
+/// <summary>
+/// An attribute that declares a bit-field
+/// </summary>
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
 public sealed class BitFieldAttribute : Attribute
 {
     /// <summary>
     /// The name of the bit-field that is being declared
+    /// <remark>
     /// <para>
     /// Null or empty will generate padding bits
     /// </para>
+    /// </remark>
     /// </summary>
     public string? Name { get; }
     /// <summary>
@@ -17,13 +21,15 @@ public sealed class BitFieldAttribute : Attribute
     public byte Size { get; }
     /// <summary>
     /// The primitive type of this bit-field
+    /// <remark>
     /// <para>
     /// This is only used for boolean and memory backed bit-fields
     /// </para>
+    /// </remark>
     /// </summary>
     public BitFieldType? FieldType { get; }
     /// <summary>
-    /// Uses the opposite bit order to the object's <see cref="BitObjectAttribute.DefaultOrder"/>
+    /// Indicates if the bit-field uses the object's default bit order or not
     /// </summary>
     public bool ReverseBitOrder { get; set; }
     /// <summary>

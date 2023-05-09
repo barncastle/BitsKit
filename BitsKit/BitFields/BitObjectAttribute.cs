@@ -1,14 +1,13 @@
 ﻿namespace BitsKit.BitFields;
 
 /// <summary>
-/// A marker attribute to declare if an object contains 
-/// bit-fields and their default bit order
+/// A marker attribute declaring an object contains bit-fields
 /// </summary>
 [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class, AllowMultiple = false)]
 public sealed class BitObjectAttribute : Attribute
 {
     /// <summary>
-    /// Defines the default bit-field bit order
+    /// Defines the default bit order for the type
     /// </summary>
     public BitOrder DefaultOrder { get; }
 

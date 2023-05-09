@@ -4,7 +4,7 @@
 
 /// <summary>
 /// Represents a 128-bit unsigned integer.
-/// <para>Polyfill for pre-NET7_0</para>
+/// <remark>Polyfill for pre-NET7_0</remark>
 /// </summary>
 [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
 internal readonly struct UInt128
@@ -85,7 +85,7 @@ internal static class UInt128Helper
 {
     /// <summary>
     /// Reverses an unsigned 128-bit integral value - performs an endianness swap
-    /// <para>Not publically available until NET8_0.</para>
+    /// <remark>Not publically available until NET8_0.</remark>
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static UInt128 ReverseEndianness(UInt128 value)

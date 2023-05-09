@@ -3,9 +3,9 @@
 public static partial class BitPrimitives
 {
     /// <summary>
-    /// Reads a bit from a span of bytes, as most significant bit first.
+    /// Reads a most significant bit from a span of bytes
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static bool ReadBitMSB(ReadOnlySpan<byte> source, int bitOffset)
     {
         if (bitOffset < 0 || bitOffset + 1 > source.Length * 8)
@@ -15,10 +15,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized <see cref="sbyte"/> from a span of bytes
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, <see cref="sbyte"/> from 
+    /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static sbyte ReadInt8MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         int result = ReadUInt8MSB(source, bitOffset, bitCount);
@@ -27,10 +27,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized value from a <see cref="sbyte"/>
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, value from 
+    /// a <see cref="sbyte"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static sbyte ReadInt8MSB(sbyte source, int bitOffset, int bitCount)
     {
         int result = ReadUInt8MSB((byte)source, bitOffset, bitCount);
@@ -39,10 +39,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized <see cref="short"/> from a span of bytes
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, <see cref="short"/> from 
+    /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static short ReadInt16MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         int result = ReadUInt16MSB(source, bitOffset, bitCount);
@@ -51,10 +51,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized value from a <see cref="short"/>
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, value from 
+    /// a <see cref="short"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static short ReadInt16MSB(short source, int bitOffset, int bitCount)
     {
         int result = ReadUInt16MSB((ushort)source, bitOffset, bitCount);
@@ -63,10 +63,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized <see cref="int"/> from a span of bytes
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, <see cref="int"/> from 
+    /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/>  
     public static int ReadInt32MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         int result = (int)ReadUInt32MSB(source, bitOffset, bitCount);
@@ -75,10 +75,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized value from a <see cref="int"/>
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, value from 
+    /// a <see cref="int"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static int ReadInt32MSB(int source, int bitOffset, int bitCount)
     {
         int result = (int)ReadUInt32MSB((uint)source, bitOffset, bitCount);
@@ -87,10 +87,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized <see cref="long"/> from a span of bytes
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, <see cref="long"/> from 
+    /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static long ReadInt64MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         long result = (long)ReadUInt64MSB(source, bitOffset, bitCount);
@@ -99,10 +99,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized value from a <see cref="long"/>
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, value from 
+    /// a <see cref="long"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static long ReadInt64MSB(long source, int bitOffset, int bitCount)
     {
         long result = (long)ReadUInt64MSB((ulong)source, bitOffset, bitCount);
@@ -111,8 +111,8 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized <see cref="nint"/> from a span of bytes
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, <see cref="nint"/> from 
+    /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static nint ReadIntPtrMSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
@@ -124,10 +124,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized value from a <see cref="nint"/>
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, value from 
+    /// a <see cref="nint"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>  
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static nint ReadIntPtrMSB(nint source, int bitOffset, int bitCount)
     {
         if (IntPtr.Size == 8)
@@ -137,10 +137,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized <see cref="byte"/> from a span of bytes
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, <see cref="byte"/> from 
+    /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static byte ReadUInt8MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         ValidateArgs(source.Length * 8, bitOffset, bitCount, 8);
@@ -151,10 +151,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized value from a <see cref="byte"/>
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, value from 
+    /// a <see cref="byte"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static byte ReadUInt8MSB(byte source, int bitOffset, int bitCount)
     {
         ValidateArgs(8, bitOffset, bitCount, 8);
@@ -163,10 +163,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized <see cref="ushort"/> from a span of bytes
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, <see cref="ushort"/> from 
+    /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static ushort ReadUInt16MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         ValidateArgs(source.Length * 8, bitOffset, bitCount, 16);
@@ -177,10 +177,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized value from a <see cref="ushort"/>
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, value from 
+    /// a <see cref="ushort"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static ushort ReadUInt16MSB(ushort source, int bitOffset, int bitCount)
     {
         ValidateArgs(16, bitOffset, bitCount, 16);
@@ -189,10 +189,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized <see cref="uint"/> from a span of bytes
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, <see cref="uint"/> from 
+    /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static uint ReadUInt32MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         ValidateArgs(source.Length * 8, bitOffset, bitCount, 32);
@@ -206,10 +206,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized value from a <see cref="uint"/>
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, value from 
+    /// a <see cref="uint"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static uint ReadUInt32MSB(uint source, int bitOffset, int bitCount)
     {
         ValidateArgs(32, bitOffset, bitCount, 32);
@@ -218,10 +218,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized <see cref="ulong"/> from a span of bytes
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, <see cref="ulong"/> from 
+    /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static ulong ReadUInt64MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         ValidateArgs(source.Length * 8, bitOffset, bitCount, 64);
@@ -235,10 +235,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized value from a <see cref="ulong"/>
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, value from 
+    /// a <see cref="ulong"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>    
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static ulong ReadUInt64MSB(ulong source, int bitOffset, int bitCount)
     {
         ValidateArgs(64, bitOffset, bitCount, 64);
@@ -247,8 +247,8 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized <see cref="nuint"/> from a span of bytes
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, <see cref="nuint"/> from 
+    /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static nuint ReadUIntPtrMSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
@@ -260,10 +260,10 @@ public static partial class BitPrimitives
     }
 
     /// <summary>
-    /// Reads a <paramref name="bitCount"/> sized value from a <see cref="nuint"/>
-    /// at the specified <paramref name="bitOffset"/>, as most significant bit first.
+    /// Reads a <paramref name="bitCount"/> sized, most significant bit, value from 
+    /// a <see cref="nuint"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/>  
+    /// <exception cref="ArgumentOutOfRangeException"/> 
     public static nuint ReadUIntPtrMSB(nuint source, int bitOffset, int bitCount)
     {
         if (IntPtr.Size == 8)

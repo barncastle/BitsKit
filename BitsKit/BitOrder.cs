@@ -6,11 +6,11 @@
 public enum BitOrder
 {
     /// <summary>
-    /// AKA "Low-Order" or "Right-Most" bit
+    /// "Low-Order" or "Right-Most" bit
     /// </summary>
     LeastSignificant,
     /// <summary>
-    /// AKA "High-Order" or "Left-Most" bit
+    /// "High-Order" or "Left-Most" bit
     /// </summary>
     MostSignificant
 }

@@ -185,37 +185,46 @@ public sealed class BitReader
 
     /// <summary>
     /// Creates a new <see cref="BitReader"/> from a specified number of <see cref="byte"/>
-    /// elements starting at a specified memory address.
+    /// elements starting at a specified memory address
     /// </summary>
-    /// <returns>A new <see cref="BitReader"/></returns>
+    /// <param name="source">An unmanaged pointer to memory</param>
+    /// <param name="length">The number of bytes the memory contains</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the specified <paramref name="length"/> is negative
+    /// </exception>
     public static unsafe BitReader FromPointer(void* source, int length)
     {
         return new(new Span<byte>(source, length).ToArray());
     }
 
     /// <summary>
-    /// Creates a new <see cref="BitReader"/> object over a span of bytes.
+    /// Creates a new <see cref="BitReader"/> object over a span of bytes
     /// </summary>
-    /// <returns>A new <see cref="BitReader"/></returns>
+    /// <param name="source">The read-only span to read</param>
     public static BitReader FromBytes(ReadOnlySpan<byte> source)
     {
         return new(source.ToArray());
     }
 
     /// <summary>
-    /// Creates a new <see cref="BitReader"/> object over the entirety of a specified array of bytes.
+    /// Creates a new <see cref="BitReader"/> object over the entirety of a specified array of bytes
     /// </summary>
-    /// <returns>A new <see cref="BitReader"/></returns>
+    /// <param name="source">The byte array to read</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> is null</exception>
     public static BitReader FromBytes(byte[] source)
     {
+        if (source is null)
+            throw new ArgumentNullException(nameof(source));
+
         return new(source);
     }
 
     /// <summary>
-    /// Creates a new <see cref="BitReader"/> over a regular managed object.
+    /// Creates a new <see cref="BitReader"/> from a regular managed object
     /// </summary>
-    /// <returns>A new <see cref="BitReader"/></returns>
-    public static BitReader FromObject<T>(ref T source) where T : unmanaged
+    /// <param name="source">The managed object to read</param>
+    /// <exception cref="ArgumentException">Thrown when <typeparamref name="T"/> contains pointers</exception>
+    public static BitReader FromObject<T>(T source) where T : unmanaged
     {
         Span<byte> sourceBytes = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref source, 1));
         return new(sourceBytes.ToArray());

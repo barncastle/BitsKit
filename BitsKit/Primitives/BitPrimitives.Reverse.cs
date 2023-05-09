@@ -4,9 +4,7 @@ namespace BitsKit.Primitives;
 
 public partial class BitPrimitives
 {
-    /// <summary>Reverses the bit order of each byte within a primitive value.</summary>
-    /// <param name="value">The value to reverse.</param>
-    /// <returns>The reversed value.</returns>
+    /// <summary>Reverses the bit order of each byte within a primitive value</summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static sbyte ReverseBitOrder(sbyte value)
     {

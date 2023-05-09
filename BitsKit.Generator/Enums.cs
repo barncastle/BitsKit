@@ -3,9 +3,9 @@
 namespace BitsKit.Generator;
 
 /// <summary>
-/// Enumeration to differentiate the backing field type
+/// An enumeration of the different backing field types
 /// </summary>
-internal enum BackingType
+internal enum BackingFieldType
 {
     Integral,
     Memory,
@@ -39,7 +39,7 @@ internal enum BitFieldType
 }
 
 /// <summary>
-/// Dictates the direction of the bits respresented in a unit
+/// An enumeration listing the possible directions of bits in a unit
 /// </summary>
 internal enum BitOrder
 {
@@ -54,34 +54,37 @@ internal enum BitOrder
 }
 
 /// <summary>
-/// Modifiers for the generated bit-field property
+/// An enumeration listing all of the options to modify bit-field generation
 /// </summary>
 [Flags]
 internal enum BitFieldModifiers
 {
+    /// <summary>
+    /// Generates a public settable property
+    /// </summary>
     None = 0,
     /// <summary>
-    /// Generates a public accessor
+    /// Specifies the property is public
     /// </summary>
     Public = 0x01,
     /// <summary>
-    /// Generates an internal accessor
+    /// Specifies the property is internal
     /// </summary>
     Internal = 0x02,
     /// <summary>
-    /// Generates a private accessor
+    /// Specifies the property is private
     /// </summary>
     Private = 0x04,
     /// <summary>
-    /// Only generates a getter
+    /// Specifies the property is readonly
     /// </summary>
     ReadOnly = 0x08,
     /// <summary>
-    /// Generates an init only setter
+    /// Specifies the property is init only
     /// </summary>
     InitOnly = 0x10,
     /// <summary>
-    /// Generates a required modifier
+    /// Specifies the property is required
     /// </summary>
     Required = 0x20,
 

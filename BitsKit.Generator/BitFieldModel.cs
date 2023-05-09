@@ -12,7 +12,7 @@ internal sealed class BitFieldModel
     public string Name { get; } = null!;
     public BitFieldType? FieldType { get; set; }
     public IFieldSymbol BackingField { get; set; } = null!;
-    public BackingType BackingType { get; set; }
+    public BackingFieldType BackingFieldType { get; set; }
     public int BitOffset { get; set; }
     public int BitCount { get; set; }
     public BitOrder BitOrder { get; set; }
@@ -118,12 +118,12 @@ internal sealed class BitFieldModel
     /// </summary>
     private string GetPropertyTemplate()
     {
-        return BackingType switch
+        return BackingFieldType switch
         {
-            BackingType.Integral or
-            BackingType.Memory or
-            BackingType.Span => StringConstants.PropertyTemplate,
-            BackingType.Pointer => StringConstants.UnsafePropertyTemplate,
+            BackingFieldType.Integral or
+            BackingFieldType.Memory or
+            BackingFieldType.Span => StringConstants.PropertyTemplate,
+            BackingFieldType.Pointer => StringConstants.UnsafePropertyTemplate,
             _ => throw new NotSupportedException(),
         };
     }
@@ -141,20 +141,20 @@ internal sealed class BitFieldModel
     /// </summary>
     private string GetGetterTemplate()
     {
-        string source = BackingType switch
+        string source = BackingFieldType switch
         {
-            BackingType.Integral => "{2}",
-            BackingType.Memory => "{2}.Span",
-            BackingType.Span => "{2}",
-            BackingType.Pointer => "MemoryMarshal.CreateReadOnlySpan(ref {2}[0], {5})",
+            BackingFieldType.Integral => "{2}",
+            BackingFieldType.Memory => "{2}.Span",
+            BackingFieldType.Span => "{2}",
+            BackingFieldType.Pointer => "MemoryMarshal.CreateReadOnlySpan(ref {2}[0], {5})",
             _ => throw new NotSupportedException()
         };
 
-        string getter = (BackingType, IsBoolean) switch
+        string getter = (BackingFieldType, IsBoolean) switch
         {
             { IsBoolean: false } => StringConstants.IntegralGetterTemplate,
-            { BackingType: BackingType.Integral } => StringConstants.BooleanGetterTemplate,
-            { BackingType: not BackingType.Integral } => StringConstants.BooleanSpanGetterTemplate,
+            { BackingFieldType: BackingFieldType.Integral } => StringConstants.BooleanGetterTemplate,
+            { BackingFieldType: not BackingFieldType.Integral } => StringConstants.BooleanSpanGetterTemplate,
         };
 
         return string.Format(getter, source);
@@ -174,20 +174,20 @@ internal sealed class BitFieldModel
     /// </summary>
     private string GetSetterTemplate()
     {
-        string source = BackingType switch
+        string source = BackingFieldType switch
         {
-            BackingType.Integral => "ref {3}",
-            BackingType.Memory => "{3}.Span",
-            BackingType.Span => "{3}",
-            BackingType.Pointer => "MemoryMarshal.CreateSpan(ref {3}[0], {6})",
+            BackingFieldType.Integral => "ref {3}",
+            BackingFieldType.Memory => "{3}.Span",
+            BackingFieldType.Span => "{3}",
+            BackingFieldType.Pointer => "MemoryMarshal.CreateSpan(ref {3}[0], {6})",
             _ => throw new NotSupportedException()
         };
 
-        string setter = (BackingType, IsBoolean) switch
+        string setter = (BackingFieldType, IsBoolean) switch
         {
             { IsBoolean: false } => StringConstants.IntegralSetterTemplate,
-            { BackingType: BackingType.Integral } => StringConstants.BooleanSetterTemplate,
-            { BackingType: not BackingType.Integral } => StringConstants.BooleanSpanSetterTemplate,
+            { BackingFieldType: BackingFieldType.Integral } => StringConstants.BooleanSetterTemplate,
+            { BackingFieldType: not BackingFieldType.Integral } => StringConstants.BooleanSpanSetterTemplate,
         };
 
         return string.Format(setter, source, FieldType);

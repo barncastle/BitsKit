@@ -1,4 +1,5 @@
-﻿using BitsKit.Primitives;
+﻿using System.ComponentModel;
+using BitsKit.Primitives;
 
 namespace BitsKit.IO;
 
@@ -7,7 +8,7 @@ namespace BitsKit.IO;
 /// </summary>
 public sealed class BitStreamReader : IDisposable
 {
-    /// <inheritdoc cref="MemoryBitWriter.Position"/>
+    /// <inheritdoc cref="BitStreamWriter.Position"/>
     public long Position
     {
         get => (_bytePos << 3) + _bitsPos;
@@ -40,13 +41,7 @@ public sealed class BitStreamReader : IDisposable
         _leaveOpen = leaveOpen;
     }
 
-    /// <summary>
-    /// Seeks to the specified 
-    /// </summary>
-    /// <param name="offset"></param>
-    /// <param name="origin"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <inheritdoc cref="BitStreamWriter.Seek(long, SeekOrigin)"/>
     public long Seek(long offset, SeekOrigin origin)
     {
         return Position = origin switch
@@ -54,13 +49,11 @@ public sealed class BitStreamReader : IDisposable
             SeekOrigin.Begin => offset,
             SeekOrigin.Current => Position + offset,
             SeekOrigin.End => Length - offset,
-            _ => throw new ArgumentOutOfRangeException(nameof(origin))
+            _ => throw new InvalidEnumArgumentException(nameof(origin))
         };
     }
 
-    /// <summary>
-    /// Closes this reader and releases all associated resources.
-    /// </summary>
+    /// <inheritdoc cref="BitStreamWriter.Dispose"/>
     public void Dispose()
     {
         if (!_disposed)
@@ -262,13 +255,14 @@ public sealed class BitStreamReader : IDisposable
     private void PopulateBuffer(int bitCount)
     {
         // calculate the number of whole bytes to buffer
-        int bytesRequired = (bitCount - ((8 - _bitsPos) & 7) + 7) >> 3;
+        int bitsBuffered = (8 - _bitsPos) & 7;
+        int bytesRequired = (bitCount - bitsBuffered + 7) >> 3;
 
         // buffer the last byte if there are any unread bits
         if (_bitsPos != 0)
             _buffer[0] = _buffer[_buffLen - 1];
 
-        if (bytesRequired > 0)
+        if (bytesRequired != 0)
         {
             if (_bitsPos != 0)
                 _buffLen = BufferExactly(1, bytesRequired) + 1;

@@ -3,9 +3,9 @@
 public static partial class BitUtilities
 {
     /// <summary>
-    /// Merge bits from two integer values according to a mask
+    /// Merges the bits from two integral values according to a mask
     /// <para>
-    /// Where the mask bits are 1, bits are selected from b otherwise a
+    /// Where the mask bits are 0, bits are selected from a otherwise b
     /// </para>
     /// </summary>
     /// <param name="a">Value to merge in non-masked bits</param>

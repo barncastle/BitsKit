@@ -3,7 +3,8 @@
 public static partial class BitUtilities
 {
     /// <summary>
-    /// Reverses the bit order of a primitive value
+    /// Reverses the order of all bits in an integral value. 
+    /// This is functionally equivalent to reversing both the bit order and endianness
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static sbyte ReverseBits(sbyte value)

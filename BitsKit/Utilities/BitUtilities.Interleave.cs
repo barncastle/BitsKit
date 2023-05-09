@@ -3,7 +3,7 @@
 public static partial class BitUtilities
 {
     /// <summary>
-    /// Interleaves the bits of two integers (see Morton codes)
+    /// Interleaves the bits of two integral values (see Morton numbers)
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static short InterleaveBits(sbyte a, sbyte b)

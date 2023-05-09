@@ -51,19 +51,19 @@ internal sealed class TypeSymbolProcessor
             if (!IsValidFieldSymbol(field))
                 continue;
 
-            BackingType backingType = field.Type.ToDisplayString() switch
+            BackingFieldType backingType = field.Type.ToDisplayString() switch
             {
-                "System.Memory<byte>" => BackingType.Memory,
-                "System.ReadOnlyMemory<byte>" => BackingType.Memory,
-                "System.Span<byte>" => BackingType.Span,
-                "System.ReadOnlySpan<byte>" => BackingType.Span,
-                "byte[]" => BackingType.Span,
-                "byte*" => BackingType.Pointer,
-                _ when IsSupportedIntegralType(field) => BackingType.Integral,
-                _ => BackingType.Invalid
+                "System.Memory<byte>" => BackingFieldType.Memory,
+                "System.ReadOnlyMemory<byte>" => BackingFieldType.Memory,
+                "System.Span<byte>" => BackingFieldType.Span,
+                "System.ReadOnlySpan<byte>" => BackingFieldType.Span,
+                "byte[]" => BackingFieldType.Span,
+                "byte*" => BackingFieldType.Pointer,
+                _ when IsSupportedIntegralType(field) => BackingFieldType.Integral,
+                _ => BackingFieldType.Invalid
             };
 
-            if (backingType == BackingType.Invalid)
+            if (backingType == BackingFieldType.Invalid)
                 continue;
 
             CreateBitFieldModels(field, backingType);
@@ -72,7 +72,7 @@ internal sealed class TypeSymbolProcessor
         return _fields.Count;
     }
 
-    private void CreateBitFieldModels(IFieldSymbol field, BackingType backingType)
+    private void CreateBitFieldModels(IFieldSymbol field, BackingFieldType backingType)
     {
         int offset = 0;
 
@@ -81,7 +81,7 @@ internal sealed class TypeSymbolProcessor
             BitFieldModel bitField = new(attribute)
             {
                 BackingField = field,
-                BackingType = backingType,
+                BackingFieldType = backingType,
                 BitOffset = offset,
                 BitOrder = _defaultBitOrder,
             };
@@ -94,7 +94,7 @@ internal sealed class TypeSymbolProcessor
                     bitField.BitOrder ^= BitOrder.MostSignificant;
 
                 // integrals inherit their field type from their backing field
-                if (backingType == BackingType.Integral)
+                if (backingType == BackingFieldType.Integral)
                     bitField.FieldType = field.Type.SpecialType.ToBitFieldType();
 
                 // add to list of fields to generate

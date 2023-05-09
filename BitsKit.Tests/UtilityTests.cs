@@ -64,20 +64,20 @@ public class UtilityTests
     public void BitInvertTest()
     {
         byte uint8___ = 0b1100_1101;
-        Assert.AreEqual(0b0011_0010, BitUtilities.InvertBits(uint8___, 0, 8));
-        Assert.AreEqual(0b1100_1101, BitUtilities.InvertBits(uint8___, 0, 0));
-        Assert.AreEqual(0b1100_0010, BitUtilities.InvertBits(uint8___, 0, 4));
-        Assert.AreEqual(0b0011_1101, BitUtilities.InvertBits(uint8___, 4, 4));
+        Assert.AreEqual(0b0011_0010, BitUtilities.NegateBits(uint8___, 0, 8));
+        Assert.AreEqual(0b1100_1101, BitUtilities.NegateBits(uint8___, 0, 0));
+        Assert.AreEqual(0b1100_0010, BitUtilities.NegateBits(uint8___, 0, 4));
+        Assert.AreEqual(0b0011_1101, BitUtilities.NegateBits(uint8___, 4, 4));
 
         uint uint32__ = 0b1111_1110_1111_0000_1111_0101_1111_0001u;
-        Assert.AreEqual(0b0000_0001_0000_1111_0000_1010_0000_1110u, BitUtilities.InvertBits(uint32__, 0, 32));
-        Assert.AreEqual(0b1100_0001_0000_1111_0000_1010_0000_1110u, BitUtilities.InvertBits(uint32__, 0, 30));
-        Assert.AreEqual(0b0000_0001_0000_1111_0000_1010_0000_1101u, BitUtilities.InvertBits(uint32__, 2, 30));
+        Assert.AreEqual(0b0000_0001_0000_1111_0000_1010_0000_1110u, BitUtilities.NegateBits((ulong)uint32__, 0, 32));
+        Assert.AreEqual(0b1100_0001_0000_1111_0000_1010_0000_1110u, BitUtilities.NegateBits((ulong)uint32__, 0, 30));
+        Assert.AreEqual(0b0000_0001_0000_1111_0000_1010_0000_1101u, BitUtilities.NegateBits((ulong)uint32__, 2, 30));
 
         ulong uint64_ = 0b1111_1111_1111_1110_1111_0000_1111_0101_1111_0000_0001_0111_1111_0100_0000_0110UL;
-        Assert.AreEqual(0b0000_0000_0000_0001_0000_1111_0000_1010_0000_1111_1110_1000_0000_1011_1111_1001UL, BitUtilities.InvertBits(uint64_, 0, 64));
-        Assert.AreEqual(0b1111_1111_1111_1110_1111_0000_1100_1010_0000_1111_1110_1000_0000_1011_1000_0110UL, BitUtilities.InvertBits(uint64_, 7, 31));
-        Assert.AreEqual(0b0000_0000_0000_0001_0000_1111_0000_1010_0000_1100_0001_0111_1111_0100_0000_0110UL, BitUtilities.InvertBits(uint64_, 26, 62));
+        Assert.AreEqual(0b0000_0000_0000_0001_0000_1111_0000_1010_0000_1111_1110_1000_0000_1011_1111_1001UL, BitUtilities.NegateBits(uint64_, 0, 64));
+        Assert.AreEqual(0b1111_1111_1111_1110_1111_0000_1100_1010_0000_1111_1110_1000_0000_1011_1000_0110UL, BitUtilities.NegateBits(uint64_, 7, 31));
+        Assert.AreEqual(0b0000_0000_0000_0001_0000_1111_0000_1010_0000_1100_0001_0111_1111_0100_0000_0110UL, BitUtilities.NegateBits(uint64_, 26, 62));
 
     }
 
