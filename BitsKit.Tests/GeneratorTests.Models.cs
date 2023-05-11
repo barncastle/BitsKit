@@ -107,25 +107,3 @@ public unsafe partial struct BitFieldFixedStruct
         set => Unsafe.WriteUnaligned(ref BackingField00[0], value);
     }
 }
-
-[BitObject(BitOrder.LeastSignificant)]
-public unsafe ref partial struct BooleanGeneratorTest
-{
-    [BitField("Generated01", 2, BitFieldType.Boolean)]
-    public int BackingField00;       
-
-    [BitField("Generated10", 2, BitFieldType.Boolean)]
-    public Span<byte> BackingField01;
-
-    [BitField("Generated20", 2, BitFieldType.Boolean)]
-    public ReadOnlySpan<byte> BackingField02;
-
-    [BitField("Generated30", 2, BitFieldType.Boolean)]
-    public fixed byte BackingField03[4];
-
-    [BitField("Generated41", 2, BitFieldType.Boolean)]
-    public byte BackingField04;
-
-    [BitField("Generated51", 2, BitFieldType.Boolean)]
-    public sbyte BackingField05;
-}
