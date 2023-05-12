@@ -7,10 +7,8 @@ namespace BitsKit.IO;
 /// A writer for packing bits into a stream
 /// <remarks>
 /// <para>
-/// Note: Writing mid-place bits is supported but requires
-/// the underlying stream to be both readable and seekable.<br/>
-/// If the stream does not support seeking or reading, the 
-/// operation will overwrite any existing data.
+/// Note: Writing mid-stream bits requires the source
+/// stream to be readable to allow buffering
 /// </para> 
 /// </remarks>
 /// </summary>
@@ -20,6 +18,7 @@ public sealed class BitStreamWriter : IDisposable
     /// Gets or sets the bit position of the current stream
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <exception cref="NotSupportedException"></exception>
     public long Position
     {
         get => (_bytePos << 3) + _bitsPos;
@@ -36,7 +35,6 @@ public sealed class BitStreamWriter : IDisposable
     private long _bytePos;
     private int _bitsPos;
 
-    private readonly bool _canRead; // TODO: should the writer error instead?
     private readonly bool _leaveOpen;
     private bool _disposed;
 
@@ -51,7 +49,6 @@ public sealed class BitStreamWriter : IDisposable
 
         _stream = source;
         _leaveOpen = leaveOpen;
-        _canRead = source.CanRead && source.CanSeek;
         _bytePos = source.Position;
 
         ResetBuffer();
@@ -60,6 +57,7 @@ public sealed class BitStreamWriter : IDisposable
     /// <summary>
     /// Sets the bit position within the current stream
     /// </summary>
+    /// <exception cref="NotSupportedException"></exception>
     /// <exception cref="InvalidEnumArgumentException"></exception>
     public long Seek(long offset, SeekOrigin origin)
     {
@@ -297,7 +295,7 @@ public sealed class BitStreamWriter : IDisposable
         _buffer = 0;
 
         // if this is mid-stream, buffer the next byte
-        if (_canRead && _stream.Position < _stream.Length)
+        if (_stream.Position < _stream.Length)
         {
             _buffer = (byte)_stream.ReadByte();
             _stream.Position -= 1;
@@ -308,7 +306,7 @@ public sealed class BitStreamWriter : IDisposable
     {
         // if this is a mid-stream write then populate the buffer
         // with the existing data to allow writing in-place
-        if (_canRead && _bytePos < _stream.Length)
+        if (_bytePos < _stream.Length)
         {
             int read = _stream.Read(buffer);
             _stream.Position -= read;
