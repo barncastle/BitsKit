@@ -8,7 +8,7 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static bool ReadBitMSB(ReadOnlySpan<byte> source, int bitOffset)
     {
-        if (bitOffset < 0 || bitOffset + 1 > source.Length * 8)
+        if (bitOffset < 0 || bitOffset >= source.Length * 8)
             throw new ArgumentOutOfRangeException(nameof(bitOffset));
 
         return ((source[bitOffset >> 3] >> (7 - (bitOffset & 7))) & 1) == 1;
