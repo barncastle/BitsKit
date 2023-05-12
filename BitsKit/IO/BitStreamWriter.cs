@@ -297,7 +297,7 @@ public sealed class BitStreamWriter : IDisposable
         _buffer = 0;
 
         // if this is mid-stream, buffer the next byte
-        if (_canRead && _bytePos < _stream.Length)
+        if (_canRead && _stream.Position < _stream.Length)
         {
             _buffer = (byte)_stream.ReadByte();
             _stream.Position -= 1;
@@ -340,19 +340,22 @@ public sealed class BitStreamWriter : IDisposable
         if (position < 0)
             throw new ArgumentOutOfRangeException(nameof(position));
 
-        // calculate offsets
-        _bytePos = position >> 3;
-        _bitsPos = (int)(position & 7);
+        // get the new stream position
+        long newBytePos = position >> 3;
 
         // check if this is a Seek operation
-        if (_bytePos != _stream.Position)
+        if (newBytePos != _stream.Position)
         {
             // write any buffered bits
             Flush();
             // update the stream position
-            _stream.Position = _bytePos;
+            _stream.Position = newBytePos;
             // and repopulate the buffer
             ResetBuffer();
         }
+
+        // update internal positions
+        _bytePos = newBytePos;
+        _bitsPos = (int)(position & 7);
     }
 }
