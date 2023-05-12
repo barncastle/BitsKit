@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using BitsKit.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -50,7 +51,7 @@ public class IO_WriterTests
 
             CollectionAssert.AreEqual(expected[..byteCount], data1[..byteCount], "BitWriter");
             CollectionAssert.AreEqual(expected[..byteCount], data2[..byteCount], "MemoryBitWriter");
-            CollectionAssert.AreEqual(expected[..byteCount], data3[..byteCount], "BitStreamWriter");                       
+            CollectionAssert.AreEqual(expected[..byteCount], data3[..byteCount], "BitStreamWriter");
 
             Assert.AreEqual(bitOffset, bitWriter.Position, "BitWriter.Position");
             Assert.AreEqual(bitOffset, memoryBitWriter.Position, "MemoryBitWriter.Position");
@@ -250,5 +251,42 @@ public class IO_WriterTests
         CollectionAssert.AreEqual(expected, data1, "BitWriter");
         CollectionAssert.AreEqual(expected, data2, "MemoryBitWriter");
         CollectionAssert.AreEqual(expected, data3, "BitStreamWriter");
+    }
+
+    [TestMethod]
+    public void WriteOnlyStreamTest()
+    {
+        byte[] expected = new byte[10];
+
+        using WriteOnlyMemoryStream ms = new();
+        using BitStreamWriter bitStreamWriter = new(ms);
+
+        ulong value = Unsafe.ReadUnaligned<ulong>(ref Data[2]);
+
+        int bitOffset = 0;
+        foreach (int bitCount in BitCounts)
+        {
+            Helpers.WriteBitsLSB(expected, bitOffset, value, bitCount);
+
+            bitStreamWriter.WriteUInt64LSB(value, bitCount);
+
+            bitOffset += bitCount;
+
+            // BitStreamWriter buffers partially written bytes
+            // so only comparing the number of whole bytes written
+            int byteCount = bitOffset >> 3;
+
+            CollectionAssert.AreEqual(expected[..byteCount], ms.GetBuffer(byteCount), "BitStreamWriter");
+
+            Assert.AreEqual(bitOffset, bitStreamWriter.Position, "BitStreamWriter.Position");
+        }
+
+        // write remaining bits to stream
+        bitStreamWriter.Flush();
+
+        CollectionAssert.AreEqual(expected, ms.GetBuffer((int)ms.Length), "BitStreamWriter");
+
+        // check we can't seek or buffer
+        Assert.ThrowsException<NotSupportedException>(() => bitStreamWriter.Position = 0);
     }
 }
