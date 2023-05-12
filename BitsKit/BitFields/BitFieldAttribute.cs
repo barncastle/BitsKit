@@ -4,7 +4,7 @@
 /// An attribute that declares a bit-field
 /// </summary>
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-public sealed class BitFieldAttribute : Attribute
+public class BitFieldAttribute : Attribute
 {
     /// <summary>
     /// The name of the bit-field that is being declared

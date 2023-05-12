@@ -9,7 +9,7 @@ namespace BitsKit.Generator;
 /// </summary>
 internal sealed class BitFieldModel
 {
-    public string Name { get; } = null!;
+    public string Name { get; private set; } = null!;
     public BitFieldType? FieldType { get; set; }
     public IFieldSymbol BackingField { get; set; } = null!;
     public BackingFieldType BackingFieldType { get; set; }
@@ -20,21 +20,15 @@ internal sealed class BitFieldModel
     public BitFieldModifiers Modifiers { get; }
     public bool IsBoolean { get; }
 
-    public BitFieldModel(AttributeData attributeData)
+    public BitFieldModel(AttributeData attributeData, string attributeType)
     {
-        switch (attributeData.ConstructorArguments.Length)
+        switch (attributeType)
         {
-            case 1: // Padding constructor
-                BitCount = (byte)attributeData.ConstructorArguments[0].Value!;
+            case StringConstants.BitFieldAttributeFullName:
+                CreateFromBitFieldAttribute(attributeData);
                 break;
-            case 2: // Integral backed constructor
-                Name = (string)attributeData.ConstructorArguments[0].Value!;
-                BitCount = (byte)attributeData.ConstructorArguments[1].Value!;
-                break;
-            case 3: // Memory backed constructor
-                Name = (string)attributeData.ConstructorArguments[0].Value!;
-                BitCount = (byte)attributeData.ConstructorArguments[1].Value!;
-                FieldType = (BitFieldType)attributeData.ConstructorArguments[2].Value!;
+            case StringConstants.BooleanFieldAttributeFullName:
+                CreateFromBooleanFieldAttribute(attributeData);
                 break;
         }
 
@@ -105,6 +99,32 @@ internal sealed class BitFieldModel
 
         sb.AppendIndentedLine(2, "}")
           .AppendLine();
+    }
+
+    private void CreateFromBitFieldAttribute(AttributeData attributeData)
+    {
+        switch (attributeData.ConstructorArguments.Length)
+        {
+            case 1: // Padding constructor
+                BitCount = (byte)attributeData.ConstructorArguments[0].Value!;
+                break;
+            case 2: // Integral backed constructor
+                Name = (string)attributeData.ConstructorArguments[0].Value!;
+                BitCount = (byte)attributeData.ConstructorArguments[1].Value!;
+                break;
+            case 3: // Memory backed constructor
+                Name = (string)attributeData.ConstructorArguments[0].Value!;
+                BitCount = (byte)attributeData.ConstructorArguments[1].Value!;
+                FieldType = (BitFieldType)attributeData.ConstructorArguments[2].Value!;
+                break;
+        }
+    }
+
+    private void CreateFromBooleanFieldAttribute(AttributeData attributeData)
+    {
+        Name = (string)attributeData.ConstructorArguments[0].Value!;
+        BitCount = 1;
+        FieldType = BitFieldType.Boolean;
     }
 
     /// <summary>

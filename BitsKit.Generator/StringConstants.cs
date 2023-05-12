@@ -2,11 +2,12 @@
 
 internal static class StringConstants
 {
-    public const string BitFieldAttributeFullName = "BitsKit.BitFields.BitFieldAttribute";
+    public const string BitFieldAttributeFullName = "BitsKit.BitFields.BitFieldAttribute";    
     public const string BitFieldModifiersFullName = "BitsKit.BitFields.BitFieldModifiers";
     public const string BitFieldTypeFullName = "BitsKit.BitFields.BitFieldType";
     public const string BitObjectAttributeFullName = "BitsKit.BitFields.BitObjectAttribute";
     public const string BitOrderFullName = "BitsKit.BitFields.BitOrder";
+    public const string BooleanFieldAttributeFullName = "BitsKit.BitFields.BooleanFieldAttribute";
 
     /// <summary>
     /// Generated code header

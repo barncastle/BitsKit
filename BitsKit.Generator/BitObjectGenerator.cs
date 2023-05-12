@@ -41,8 +41,8 @@ public sealed class BitObjectGenerator : IIncrementalGenerator
             return null;
 
         AttributeData attribute = typeSymbol
-            .GetAttributes(StringConstants.BitObjectAttributeFullName)
-            .Single();
+            .GetAttributes()
+            .Single(a => a.AttributeClass?.ToDisplayString() == StringConstants.BitObjectAttributeFullName);
 
         return new(typeSymbol, typeDeclaration, attribute);
     }

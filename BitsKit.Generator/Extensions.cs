@@ -41,11 +41,6 @@ internal static class Extensions
         return builder;
     }
 
-    public static IEnumerable<AttributeData> GetAttributes(this ISymbol symbol, string fullName)
-    {
-        return symbol.GetAttributes().Where(x => x.AttributeClass?.ToDisplayString() == fullName);
-    }
-
     public static BitFieldType ToBitFieldType(this SpecialType type) => type switch
     {
         SpecialType.System_SByte => BitFieldType.SByte,

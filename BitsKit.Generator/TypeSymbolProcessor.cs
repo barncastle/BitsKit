@@ -76,9 +76,14 @@ internal sealed class TypeSymbolProcessor
     {
         int offset = 0;
 
-        foreach (AttributeData attribute in field.GetAttributes(StringConstants.BitFieldAttributeFullName))
+        foreach (AttributeData attribute in field.GetAttributes())
         {
-            BitFieldModel bitField = new(attribute)
+            string? attributeType = attribute.AttributeClass?.ToDisplayString();
+
+            if (!IsBitFieldAttribute(attributeType))
+                continue;
+
+            BitFieldModel bitField = new(attribute, attributeType!)
             {
                 BackingField = field,
                 BackingFieldType = backingType,
@@ -128,4 +133,8 @@ internal sealed class TypeSymbolProcessor
         SpecialType.System_UIntPtr => true,
         _ => false,
     };
+
+    private static bool IsBitFieldAttribute(string? attributeClass) => attributeClass is
+        StringConstants.BitFieldAttributeFullName or
+        StringConstants.BooleanFieldAttributeFullName;
 }

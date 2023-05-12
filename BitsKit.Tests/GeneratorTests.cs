@@ -469,6 +469,9 @@ public class GeneratorTests
 
             [BitField(""Generated30"", 2, BitFieldType.Boolean)]
             public fixed byte BackingField03[4];
+
+            [BooleanField(""Generated40"")]
+            public byte BackingField04;
         }
         ";
 
@@ -502,6 +505,12 @@ public class GeneratorTests
             {
                 get => BitPrimitives.ReadBitLSB(MemoryMarshal.CreateReadOnlySpan(ref BackingField03[0], 4), 0);
                 set => BitPrimitives.WriteBitLSB(MemoryMarshal.CreateSpan(ref BackingField03[0], 4), 0, value);
+            }
+
+            public  Boolean Generated40 
+            {
+                get => BitPrimitives.ReadUInt8LSB(BackingField04, 0, 1) == 1;
+                set => BitPrimitives.WriteUInt8LSB(ref BackingField04, 0, (Byte)(value ? 1 : 0), 1);
             }
         }
         ";
