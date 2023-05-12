@@ -3,7 +3,7 @@
 /// <summary>
 /// An attribute that declares a bit-field
 /// </summary>
-[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
+[AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
 public class BitFieldAttribute : Attribute
 {
     /// <summary>
