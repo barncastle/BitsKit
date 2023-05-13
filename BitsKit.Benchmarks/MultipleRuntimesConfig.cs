@@ -5,8 +5,10 @@ using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Filters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Loggers;
+using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Toolchains.CsProj;
 using BenchmarkDotNet.Toolchains.DotNetCli;
+using Perfolizer.Horology;
 
 namespace BitsKit.Benchmarks;
 internal class MultipleRuntimesConfig : ManualConfig
@@ -53,10 +55,12 @@ internal class MultipleRuntimesConfig : ManualConfig
 
         AddLogger(new ConsoleLogger());
         AddExporter(DefaultExporters.Plain);
-        AddColumnProvider(DefaultColumnProviders.Instance);
+        AddColumnProvider(DefaultColumnProviders.Instance);        
 
         if(filters?.Length > 0)
             AddFilter(new AllCategoriesFilter(filters));
+
+        SummaryStyle = new SummaryStyle(null, true, SizeUnit.B, TimeUnit.Nanosecond);
     }
 
     [Flags]
