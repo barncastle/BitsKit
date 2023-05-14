@@ -8,8 +8,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static void WriteBitMSB(Span<byte> destination, int bitOffset, bool value)
     {
-        if (bitOffset < 0 || bitOffset + 1 > destination.Length * 8)
-            throw new ArgumentOutOfRangeException(nameof(bitOffset));
+        if (bitOffset >= destination.Length * 8)
+            ThrowArgumentOutOfRangeException();
 
         int mask = 1 << (7 - (bitOffset & 7));
 
@@ -132,7 +132,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static void WriteUInt8MSB(Span<byte> destination, int bitOffset, byte value, int bitCount)
     {
-        ValidateArgs(destination.Length * 8, bitOffset, bitCount, 8);
+        if (!ValidateArgs(destination.Length * 8, bitOffset, bitCount, 8))
+            ThrowArgumentOutOfRangeException();
 
         ref uint target = ref Unsafe.As<byte, uint>(ref destination[bitOffset >> 3]);
         WriteValue32(ref target, bitOffset & 7, value, bitCount, BitOrder.MostSignificant);
@@ -145,7 +146,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static void WriteUInt8MSB(ref byte destination, int bitOffset, byte value, int bitCount)
     {
-        ValidateArgs(8, bitOffset, bitCount, 8);
+        if (!ValidateArgs(8, bitOffset, bitCount, 8))
+            ThrowArgumentOutOfRangeException();
 
         WriteValue32(ref Unsafe.As<byte, uint>(ref destination), bitOffset, value, bitCount, BitOrder.MostSignificant);
     }
@@ -157,7 +159,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static void WriteUInt16MSB(Span<byte> destination, int bitOffset, ushort value, int bitCount)
     {
-        ValidateArgs(destination.Length * 8, bitOffset, bitCount, 16);
+        if (!ValidateArgs(destination.Length * 8, bitOffset, bitCount, 16))
+            ThrowArgumentOutOfRangeException();
 
         ref uint target = ref Unsafe.As<byte, uint>(ref destination[bitOffset >> 3]);
         WriteValue32(ref target, bitOffset & 7, value, bitCount, BitOrder.MostSignificant);
@@ -170,7 +173,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static void WriteUInt16MSB(ref ushort destination, int bitOffset, ushort value, int bitCount)
     {
-        ValidateArgs(16, bitOffset, bitCount, 16);
+        if (!ValidateArgs(16, bitOffset, bitCount, 16))
+            ThrowArgumentOutOfRangeException();
 
         WriteValue32(ref Unsafe.As<ushort, uint>(ref destination), bitOffset, value, bitCount, BitOrder.MostSignificant);
     }
@@ -182,7 +186,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static void WriteUInt32MSB(Span<byte> destination, int bitOffset, uint value, int bitCount)
     {
-        ValidateArgs(destination.Length * 8, bitOffset, bitCount, 32);
+        if (!ValidateArgs(destination.Length * 8, bitOffset, bitCount, 32))
+            ThrowArgumentOutOfRangeException();
 
         if (bitCount + (bitOffset & 7) > 32)
         {
@@ -203,7 +208,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static void WriteUInt32MSB(ref uint destination, int bitOffset, uint value, int bitCount)
     {
-        ValidateArgs(32, bitOffset, bitCount, 32);
+        if (!ValidateArgs(32, bitOffset, bitCount, 32))
+            ThrowArgumentOutOfRangeException();
 
         WriteValue32(ref destination, bitOffset, value, bitCount, BitOrder.MostSignificant);
     }
@@ -215,7 +221,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static void WriteUInt64MSB(Span<byte> destination, int bitOffset, ulong value, int bitCount)
     {
-        ValidateArgs(destination.Length * 8, bitOffset, bitCount, 64);
+        if (!ValidateArgs(destination.Length * 8, bitOffset, bitCount, 64))
+            ThrowArgumentOutOfRangeException();
 
         ref ulong target = ref Unsafe.As<byte, ulong>(ref destination[bitOffset >> 3]);
 
@@ -232,7 +239,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static void WriteUInt64MSB(ref ulong destination, int bitOffset, ulong value, int bitCount)
     {
-        ValidateArgs(64, bitOffset, bitCount, 64);
+        if (!ValidateArgs(64, bitOffset, bitCount, 64))
+            ThrowArgumentOutOfRangeException();
 
         WriteValue64(ref destination, bitOffset, value, bitCount, BitOrder.MostSignificant);
     }

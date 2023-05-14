@@ -1,4 +1,5 @@
 ﻿using System.Buffers.Binary;
+using System.Diagnostics.CodeAnalysis;
 
 [assembly: InternalsVisibleTo("BitsKit.Benchmarks")]
 [assembly: InternalsVisibleTo("BitsKit.Tests")]
@@ -7,15 +8,20 @@ namespace BitsKit.Primitives;
 
 public static partial class BitPrimitives
 {
+    [DoesNotReturn]
+    private static void ThrowArgumentOutOfRangeException() => throw new ArgumentOutOfRangeException();
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void ValidateArgs(int availableBits, int bitOffset, int bitCount, int maxBits)
+    private static bool ValidateArgs(int availableBits, int bitOffset, int bitCount, int maxBits)
     {
         // check the amount of bits to read is valid
         if (bitCount < 0 || bitCount > maxBits)
-            throw new ArgumentOutOfRangeException(nameof(bitCount));
+            return false;
         // check the start/end offsets aren't out of bounds
         if (bitOffset < 0 || bitOffset + bitCount > availableBits)
-            throw new ArgumentOutOfRangeException(nameof(bitOffset));
+            return false;
+
+        return true;
     }
 
     private static uint ReadValue32(uint source, int bitOffset, int bitCount, BitOrder bitOrder)

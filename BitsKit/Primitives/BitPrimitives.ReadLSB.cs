@@ -9,7 +9,7 @@ public static partial class BitPrimitives
     public static bool ReadBitLSB(ReadOnlySpan<byte> source, int bitOffset)
     {
         if (bitOffset < 0 || bitOffset >= source.Length * 8)
-            throw new ArgumentOutOfRangeException(nameof(bitOffset));
+            ThrowArgumentOutOfRangeException();
 
         return ((source[bitOffset >> 3] >> (bitOffset & 7)) & 1) == 1;
     }
@@ -143,7 +143,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static byte ReadUInt8LSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
-        ValidateArgs(source.Length * 8, bitOffset, bitCount, 8);
+        if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 8))
+            ThrowArgumentOutOfRangeException();
 
         uint value = Unsafe.ReadUnaligned<uint>(ref Unsafe.AsRef(source[bitOffset >> 3]));
 
@@ -157,7 +158,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static byte ReadUInt8LSB(byte source, int bitOffset, int bitCount)
     {
-        ValidateArgs(8, bitOffset, bitCount, 8);
+        if (!ValidateArgs(8, bitOffset, bitCount, 8))
+            ThrowArgumentOutOfRangeException();
 
         return (byte)ReadValue32(source, bitOffset, bitCount, BitOrder.LeastSignificant);
     }
@@ -169,7 +171,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static ushort ReadUInt16LSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
-        ValidateArgs(source.Length * 8, bitOffset, bitCount, 16);
+        if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 16))
+            ThrowArgumentOutOfRangeException();
 
         uint value = Unsafe.ReadUnaligned<uint>(ref Unsafe.AsRef(source[bitOffset >> 3]));
 
@@ -183,7 +186,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static ushort ReadUInt16LSB(ushort source, int bitOffset, int bitCount)
     {
-        ValidateArgs(16, bitOffset, bitCount, 16);
+        if (!ValidateArgs(16, bitOffset, bitCount, 16))
+            ThrowArgumentOutOfRangeException();
 
         return (ushort)ReadValue32(source, bitOffset, bitCount, BitOrder.LeastSignificant);
     }
@@ -195,7 +199,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/>    
     public static uint ReadUInt32LSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
-        ValidateArgs(source.Length * 8, bitOffset, bitCount, 32);
+        if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 32))
+            ThrowArgumentOutOfRangeException();
 
         ulong value = Unsafe.ReadUnaligned<ulong>(ref Unsafe.AsRef(source[bitOffset >> 3]));
 
@@ -212,7 +217,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static uint ReadUInt32LSB(uint source, int bitOffset, int bitCount)
     {
-        ValidateArgs(32, bitOffset, bitCount, 32);
+        if (!ValidateArgs(32, bitOffset, bitCount, 32))
+            ThrowArgumentOutOfRangeException();
 
         return ReadValue32(source, bitOffset, bitCount, BitOrder.LeastSignificant);
     }
@@ -224,7 +230,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static ulong ReadUInt64LSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
-        ValidateArgs(source.Length * 8, bitOffset, bitCount, 64);
+        if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 64))
+            ThrowArgumentOutOfRangeException();
 
         UInt128 value = Unsafe.ReadUnaligned<UInt128>(ref Unsafe.AsRef(source[bitOffset >> 3]));
 
@@ -241,7 +248,8 @@ public static partial class BitPrimitives
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static ulong ReadUInt64LSB(ulong source, int bitOffset, int bitCount)
     {
-        ValidateArgs(64, bitOffset, bitCount, 64);
+        if (!ValidateArgs(64, bitOffset, bitCount, 64))
+            ThrowArgumentOutOfRangeException();
 
         return ReadValue64(source, bitOffset, bitCount, BitOrder.LeastSignificant);
     }
