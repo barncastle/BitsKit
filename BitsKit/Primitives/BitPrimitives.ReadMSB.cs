@@ -5,12 +5,10 @@ public static partial class BitPrimitives
     /// <summary>
     /// Reads a most significant bit from a span of bytes
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/> 
+    /// <exception cref="IndexOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ReadBitMSB(ReadOnlySpan<byte> source, int bitOffset)
     {
-        if (bitOffset >= source.Length * 8)
-            ThrowArgumentOutOfRangeException();
-
         return ((source[bitOffset >> 3] >> (7 - (bitOffset & 7))) & 1) == 1;
     }
 
@@ -19,6 +17,7 @@ public static partial class BitPrimitives
     /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static sbyte ReadInt8MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         int result = ReadUInt8MSB(source, bitOffset, bitCount);
@@ -31,6 +30,7 @@ public static partial class BitPrimitives
     /// a <see cref="sbyte"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static sbyte ReadInt8MSB(sbyte source, int bitOffset, int bitCount)
     {
         int result = ReadUInt8MSB((byte)source, bitOffset, bitCount);
@@ -43,6 +43,7 @@ public static partial class BitPrimitives
     /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static short ReadInt16MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         int result = ReadUInt16MSB(source, bitOffset, bitCount);
@@ -55,6 +56,7 @@ public static partial class BitPrimitives
     /// a <see cref="short"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static short ReadInt16MSB(short source, int bitOffset, int bitCount)
     {
         int result = ReadUInt16MSB((ushort)source, bitOffset, bitCount);
@@ -67,6 +69,7 @@ public static partial class BitPrimitives
     /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/>  
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ReadInt32MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         int result = (int)ReadUInt32MSB(source, bitOffset, bitCount);
@@ -79,6 +82,7 @@ public static partial class BitPrimitives
     /// a <see cref="int"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ReadInt32MSB(int source, int bitOffset, int bitCount)
     {
         int result = (int)ReadUInt32MSB((uint)source, bitOffset, bitCount);
@@ -91,6 +95,7 @@ public static partial class BitPrimitives
     /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long ReadInt64MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         long result = (long)ReadUInt64MSB(source, bitOffset, bitCount);
@@ -103,6 +108,7 @@ public static partial class BitPrimitives
     /// a <see cref="long"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long ReadInt64MSB(long source, int bitOffset, int bitCount)
     {
         long result = (long)ReadUInt64MSB((ulong)source, bitOffset, bitCount);
@@ -115,6 +121,7 @@ public static partial class BitPrimitives
     /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static nint ReadIntPtrMSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         if (IntPtr.Size == 8)
@@ -128,6 +135,7 @@ public static partial class BitPrimitives
     /// a <see cref="nint"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static nint ReadIntPtrMSB(nint source, int bitOffset, int bitCount)
     {
         if (IntPtr.Size == 8)
@@ -141,6 +149,7 @@ public static partial class BitPrimitives
     /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte ReadUInt8MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 8))
@@ -156,6 +165,7 @@ public static partial class BitPrimitives
     /// a <see cref="byte"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte ReadUInt8MSB(byte source, int bitOffset, int bitCount)
     {
         if (!ValidateArgs(8, bitOffset, bitCount, 8))
@@ -169,6 +179,7 @@ public static partial class BitPrimitives
     /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ushort ReadUInt16MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 16))
@@ -184,6 +195,7 @@ public static partial class BitPrimitives
     /// a <see cref="ushort"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ushort ReadUInt16MSB(ushort source, int bitOffset, int bitCount)
     {
         if (!ValidateArgs(16, bitOffset, bitCount, 16))
@@ -197,6 +209,7 @@ public static partial class BitPrimitives
     /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint ReadUInt32MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 32))
@@ -215,6 +228,7 @@ public static partial class BitPrimitives
     /// a <see cref="uint"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint ReadUInt32MSB(uint source, int bitOffset, int bitCount)
     {
         if (!ValidateArgs(32, bitOffset, bitCount, 32))
@@ -228,6 +242,7 @@ public static partial class BitPrimitives
     /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong ReadUInt64MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 64))
@@ -246,6 +261,7 @@ public static partial class BitPrimitives
     /// a <see cref="ulong"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong ReadUInt64MSB(ulong source, int bitOffset, int bitCount)
     {
         if (!ValidateArgs(64, bitOffset, bitCount, 64))
@@ -259,6 +275,7 @@ public static partial class BitPrimitives
     /// a span of bytes at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static nuint ReadUIntPtrMSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount)
     {
         if (IntPtr.Size == 8)
@@ -272,6 +289,7 @@ public static partial class BitPrimitives
     /// a <see cref="nuint"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static nuint ReadUIntPtrMSB(nuint source, int bitOffset, int bitCount)
     {
         if (IntPtr.Size == 8)
