@@ -9,28 +9,24 @@ namespace BitsKit.IO;
 public sealed class BitReader
 {
     /// <inheritdoc cref="MemoryBitReader.Position"/>
-    public long Position
+    public int Position
     {
-        get => ((long)_bytePos << 3) + _bitsPos;
-        set
-        {
-            _bytePos = (int)(value >> 3);
-            _bitsPos = (int)(value & 7);
-        }
+        get => _pos;
+        set => _pos = value;
     }
 
     /// <inheritdoc cref="MemoryBitWriter.Length"/>
     public long Length => (long)_buffer.Length << 3;
 
     private readonly byte[] _buffer;
-    private int _bytePos;
-    private int _bitsPos;
+    private int _pos;
 
     public BitReader(byte[] source)
     {
+        if(source.Length >= 0x10000000)
+            throw new ArgumentException("Source too large.", nameof(source));
+
         _buffer = source;
-        _bytePos = 0;
-        _bitsPos = 0;
     }
 
     #region Methods
@@ -38,144 +34,144 @@ public sealed class BitReader
     /// <inheritdoc cref="MemoryBitReader.ReadBitLSB"/>
     public bool ReadBitLSB()
     {
-        bool value = BitPrimitives.ReadBitLSB(_buffer.AsSpan(_bytePos), _bitsPos);
-        Position++;
+        bool value = BitPrimitives.ReadBitLSB(_buffer, _pos);
+        _pos++;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadBitMSB"/>
     public bool ReadBitMSB()
     {
-        bool value = BitPrimitives.ReadBitMSB(_buffer.AsSpan(_bytePos), _bitsPos);
-        Position++;
+        bool value = BitPrimitives.ReadBitMSB(_buffer, _pos);
+        _pos++;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadInt8LSB"/>
     public sbyte ReadInt8LSB(int bitCount)
     {
-        sbyte value = BitPrimitives.ReadInt8LSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        sbyte value = BitPrimitives.ReadInt8LSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadInt8MSB"/>
     public sbyte ReadInt8MSB(int bitCount)
     {
-        sbyte value = BitPrimitives.ReadInt8MSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        sbyte value = BitPrimitives.ReadInt8MSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadInt16LSB"/>
     public short ReadInt16LSB(int bitCount)
     {
-        short value = BitPrimitives.ReadInt16LSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        short value = BitPrimitives.ReadInt16LSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadInt16MSB"/>
     public short ReadInt16MSB(int bitCount)
     {
-        short value = BitPrimitives.ReadInt16MSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        short value = BitPrimitives.ReadInt16MSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadInt32LSB"/>
     public int ReadInt32LSB(int bitCount)
     {
-        int value = BitPrimitives.ReadInt32LSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        int value = BitPrimitives.ReadInt32LSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadInt32MSB"/>
     public int ReadInt32MSB(int bitCount)
     {
-        int value = BitPrimitives.ReadInt32MSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        int value = BitPrimitives.ReadInt32MSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadInt64LSB"/>
     public long ReadInt64LSB(int bitCount)
     {
-        long value = BitPrimitives.ReadInt64LSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        long value = BitPrimitives.ReadInt64LSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadInt64MSB"/>
     public long ReadInt64MSB(int bitCount)
     {
-        long value = BitPrimitives.ReadInt64MSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        long value = BitPrimitives.ReadInt64MSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadUInt8LSB"/>
     public byte ReadUInt8LSB(int bitCount)
     {
-        byte value = BitPrimitives.ReadUInt8LSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        byte value = BitPrimitives.ReadUInt8LSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadUInt8MSB"/>
     public byte ReadUInt8MSB(int bitCount)
     {
-        byte value = BitPrimitives.ReadUInt8MSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        byte value = BitPrimitives.ReadUInt8MSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadUInt16LSB"/>
     public ushort ReadUInt16LSB(int bitCount)
     {
-        ushort value = BitPrimitives.ReadUInt16LSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        ushort value = BitPrimitives.ReadUInt16LSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadUInt16MSB"/>
     public ushort ReadUInt16MSB(int bitCount)
     {
-        ushort value = BitPrimitives.ReadUInt16MSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        ushort value = BitPrimitives.ReadUInt16MSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadUInt32LSB"/>
     public uint ReadUInt32LSB(int bitCount)
     {
-        uint value = BitPrimitives.ReadUInt32LSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        uint value = BitPrimitives.ReadUInt32LSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadUInt32MSB"/>
     public uint ReadUInt32MSB(int bitCount)
     {
-        uint value = BitPrimitives.ReadUInt32MSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        uint value = BitPrimitives.ReadUInt32MSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadUInt64LSB"/>
     public ulong ReadUInt64LSB(int bitCount)
     {
-        ulong value = BitPrimitives.ReadUInt64LSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        ulong value = BitPrimitives.ReadUInt64LSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
     /// <inheritdoc cref="MemoryBitReader.ReadUInt64MSB"/>
     public ulong ReadUInt64MSB(int bitCount)
     {
-        ulong value = BitPrimitives.ReadUInt64MSB(_buffer.AsSpan(_bytePos), _bitsPos, bitCount);
-        Position += bitCount;
+        ulong value = BitPrimitives.ReadUInt64MSB(_buffer, _pos, bitCount);
+        _pos += bitCount;
         return value;
     }
 
