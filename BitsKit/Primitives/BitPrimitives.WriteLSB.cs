@@ -5,12 +5,9 @@ public static partial class BitPrimitives
     /// <summary>
     /// Writes a least significant bit to a span of bytes
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/> 
+    /// <exception cref="IndexOutOfRangeException"/> 
     public static void WriteBitLSB(Span<byte> destination, int bitOffset, bool value)
     {
-        if (bitOffset >= destination.Length * 8)
-            ThrowArgumentOutOfRangeException();
-
         int mask = 1 << (bitOffset & 7);
 
         if (value)

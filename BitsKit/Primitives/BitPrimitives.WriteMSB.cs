@@ -5,13 +5,10 @@ public static partial class BitPrimitives
     /// <summary>
     /// Writes a most significant bit to a span of bytes
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"/> 
+    /// <exception cref="IndexOutOfRangeException"/> 
     public static void WriteBitMSB(Span<byte> destination, int bitOffset, bool value)
     {
-        if (bitOffset >= destination.Length * 8)
-            ThrowArgumentOutOfRangeException();
-
-        int mask = 1 << (7 - (bitOffset & 7));
+        int mask = 0x80 >> (bitOffset & 7);
 
         if (value)
             destination[bitOffset >> 3] |= (byte)mask;
