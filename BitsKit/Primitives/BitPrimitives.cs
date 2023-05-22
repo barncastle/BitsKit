@@ -126,7 +126,7 @@ public static partial class BitPrimitives
         if (bitOrder == BitOrder.LeastSignificant)
         {
             WriteValue64(ref destination, bitOffset, value, countHi, bitOrder);
-            WriteValue64(ref Unsafe.Add(ref destination, 1), 0, value >> countLo, countLo, bitOrder);
+            WriteValue64(ref Unsafe.Add(ref destination, 1), 0, value >> countHi, countLo, bitOrder);
         }
         else
         {
