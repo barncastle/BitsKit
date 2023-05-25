@@ -117,8 +117,7 @@ public static partial class BitPrimitives
 
     private static void WriteValue128(ref ulong destination, int bitOffset, ulong value, int bitCount, BitOrder bitOrder)
     {
-        // benchmarking shows that splitting this into two ulong writes
-        // is ~2x faster than using UInt128 - a whopping(!) 50 to 180ns..
+        // benchmarking shows that decomposing into ulong writes is faster
 
         int countHi = 64 - bitOffset;
         int countLo = bitCount - countHi;
