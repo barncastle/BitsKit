@@ -76,7 +76,7 @@ public static partial class BitPrimitives
         }
         else
         {
-            /// align the mask and reverse it's bit order
+            // align the mask and reverse it's bit order
             mask = ReverseBitOrder(mask << bitOffset);
             // align the value to the opposite significant bit and reverse it's endianness
             value = BinaryPrimitives.ReverseEndianness(value << (32 - bitCount - bitOffset));
