@@ -24,6 +24,9 @@ public static partial class BitPrimitives
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int GetMask(int size) => (1 << size) - 1;
+
     private static uint ReadValue32(uint source, int bitOffset, int bitCount, BitOrder bitOrder)
     {
         if (bitCount == 0)
@@ -55,6 +58,45 @@ public static partial class BitPrimitives
             return source << (128 - bitCount - bitOffset) >> (128 - bitCount);
         else
             return UInt128Helper.ReverseEndianness(source) << bitOffset >> (128 - bitCount);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void WriteValue8(ref byte destination, int bitShift, int value, int bitCount)
+    {
+        if (bitCount == 0)
+            return;
+
+        destination = (byte)((destination & ~(GetMask(bitCount) << bitShift)) | ((value & GetMask(bitCount)) << bitShift));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void WriteValue16(ref ushort destination, int bitOffset, int value, int bitCount, BitOrder bitOrder)
+    {
+        if (bitCount == 0)
+            return;
+
+        // decompose into two byte refs
+        ref byte destLo = ref Unsafe.As<ushort, byte>(ref destination);
+        ref byte destHi = ref Unsafe.Add(ref destLo, 1);
+
+        int bitMask = GetMask(bitCount);
+
+        if (bitOrder == BitOrder.LeastSignificant)
+        {
+            value = (value & bitMask) << bitOffset;
+            bitMask <<= bitOffset;
+
+            destLo = (byte)((destLo & ~bitMask) | value);
+            destHi = (byte)((destHi & ~(bitMask >> 8)) | (value >> 8));
+        }
+        else
+        {
+            value = (value & bitMask) << (16 - bitCount - bitOffset);
+            bitMask <<= 16 - bitCount - bitOffset;
+
+            destLo = (byte)((destLo & ~(bitMask >> 8)) | (value >> 8));
+            destHi = (byte)((destHi & ~bitMask) | value);
+        }
     }
 
     private static void WriteValue32(ref uint destination, int bitOffset, uint value, int bitCount, BitOrder bitOrder)

@@ -132,8 +132,16 @@ public static partial class BitPrimitives
         if (!ValidateArgs(destination.Length * 8, bitOffset, bitCount, 8))
             ThrowArgumentOutOfRangeException();
 
-        ref uint target = ref Unsafe.As<byte, uint>(ref destination[bitOffset >> 3]);
-        WriteValue32(ref target, bitOffset & 7, value, bitCount, BitOrder.LeastSignificant);
+        if (bitCount + (bitOffset & 7) > 8)
+        {
+            ref ushort target = ref Unsafe.As<byte, ushort>(ref destination[bitOffset >> 3]);
+            WriteValue16(ref target, bitOffset & 7, value, bitCount, BitOrder.LeastSignificant);
+        }
+        else
+        {
+            ref byte target = ref destination[bitOffset >> 3];
+            WriteValue8(ref target, bitOffset & 7, value, bitCount);
+        }
     }
 
     /// <summary>
@@ -146,7 +154,7 @@ public static partial class BitPrimitives
         if (!ValidateArgs(8, bitOffset, bitCount, 8))
             ThrowArgumentOutOfRangeException();
 
-        WriteValue32(ref Unsafe.As<byte, uint>(ref destination), bitOffset, value, bitCount, BitOrder.LeastSignificant);
+        WriteValue8(ref destination, bitOffset, value, bitCount);
     }
 
     /// <summary>
@@ -159,8 +167,16 @@ public static partial class BitPrimitives
         if (!ValidateArgs(destination.Length * 8, bitOffset, bitCount, 16))
             ThrowArgumentOutOfRangeException();
 
-        ref uint target = ref Unsafe.As<byte, uint>(ref destination[bitOffset >> 3]);
-        WriteValue32(ref target, bitOffset & 7, value, bitCount, BitOrder.LeastSignificant);
+        if (bitCount + (bitOffset & 7) > 16)
+        {
+            ref uint target = ref Unsafe.As<byte, uint>(ref destination[bitOffset >> 3]);
+            WriteValue32(ref target, bitOffset & 7, value, bitCount, BitOrder.LeastSignificant);
+        }
+        else
+        {
+            ref ushort target = ref Unsafe.As<byte, ushort>(ref destination[bitOffset >> 3]);
+            WriteValue16(ref target, bitOffset & 7, value, bitCount, BitOrder.LeastSignificant);
+        }
     }
 
     /// <summary>
@@ -173,7 +189,7 @@ public static partial class BitPrimitives
         if (!ValidateArgs(16, bitOffset, bitCount, 16))
             ThrowArgumentOutOfRangeException();
 
-        WriteValue32(ref Unsafe.As<ushort, uint>(ref destination), bitOffset, value, bitCount, BitOrder.LeastSignificant);
+        WriteValue16(ref destination, bitOffset, value, bitCount, BitOrder.LeastSignificant);
     }
 
     /// <summary>
