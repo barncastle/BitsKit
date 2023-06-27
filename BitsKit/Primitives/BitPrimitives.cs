@@ -69,7 +69,6 @@ public static partial class BitPrimitives
         destination = (byte)((destination & ~(GetMask(bitCount) << bitShift)) | ((value & GetMask(bitCount)) << bitShift));
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void WriteValue16(ref ushort destination, int bitOffset, int value, int bitCount, BitOrder bitOrder)
     {
         if (bitCount == 0)
