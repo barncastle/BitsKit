@@ -217,7 +217,7 @@ public class WriterTests
     [DataRow(1)]
     public void ExceptionTests(int bitOffset)
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => BitPrimitives.WriteBitLSB(Array.Empty<byte>(), bitOffset, true));
+        Assert.ThrowsException<IndexOutOfRangeException>(() => BitPrimitives.WriteBitLSB(Array.Empty<byte>(), bitOffset, true));
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => BitPrimitives.WriteUInt8LSB(new byte[1], bitOffset, 1, 9 - bitOffset));
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => BitPrimitives.WriteUInt8MSB(new byte[1], bitOffset, 1, 9 - bitOffset));
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => BitPrimitives.WriteUInt16LSB(new byte[2], bitOffset, 1, 17 - bitOffset));
