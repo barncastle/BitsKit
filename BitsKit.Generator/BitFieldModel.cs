@@ -122,6 +122,9 @@ internal sealed class BitFieldModel
 
     private void CreateFromBooleanFieldAttribute(AttributeData attributeData)
     {
+        if (attributeData.ConstructorArguments.Length != 1)
+            return;
+
         Name = (string)attributeData.ConstructorArguments[0].Value!;
         BitCount = 1;
         FieldType = BitFieldType.Boolean;
