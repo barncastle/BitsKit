@@ -12,7 +12,7 @@ internal enum BackingFieldType
     Span,
     Pointer,
 
-    Invalid
+    Invalid = 0xFF
 }
 
 /// <summary>
