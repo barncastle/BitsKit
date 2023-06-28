@@ -72,11 +72,11 @@ internal sealed class TypeSymbolProcessor
         return _fields.Count;
     }
 
-    private void CreateBitFieldModels(IFieldSymbol field, BackingFieldType backingType)
+    private void CreateBitFieldModels(IFieldSymbol backingField, BackingFieldType backingType)
     {
         int offset = 0;
 
-        foreach (AttributeData attribute in field.GetAttributes())
+        foreach (AttributeData attribute in backingField.GetAttributes())
         {
             string? attributeType = attribute.AttributeClass?.ToDisplayString();
 
@@ -85,7 +85,7 @@ internal sealed class TypeSymbolProcessor
 
             BitFieldModel bitField = new(attribute, attributeType!)
             {
-                BackingField = field,
+                BackingField = backingField,
                 BackingFieldType = backingType,
                 BitOffset = offset,
                 BitOrder = _defaultBitOrder,
@@ -100,7 +100,7 @@ internal sealed class TypeSymbolProcessor
 
                 // integrals inherit their field type from their backing field
                 if (backingType == BackingFieldType.Integral)
-                    bitField.FieldType = field.Type.SpecialType.ToBitFieldType();
+                    bitField.FieldType = backingField.Type.SpecialType.ToBitFieldType();
 
                 // add to list of fields to generate
                 _fields.Add(bitField);
