@@ -84,11 +84,11 @@ public class IO_WriterTests
         int bitOffset = 0;
         foreach (int bitCount in BitCounts)
         {
-            Helpers.WriteBitsLSB(expected, bitOffset, value, bitCount);
+            Helpers.WriteBitsMSB(expected, bitOffset, value, bitCount);
 
-            bitWriter.WriteUInt64LSB(value, bitCount);
-            memoryBitWriter.WriteUInt64LSB(value, bitCount);
-            bitStreamWriter.WriteUInt64LSB(value, bitCount);
+            bitWriter.WriteUInt64MSB(value, bitCount);
+            memoryBitWriter.WriteUInt64MSB(value, bitCount);
+            bitStreamWriter.WriteUInt64MSB(value, bitCount);
 
             bitOffset += bitCount;
 
