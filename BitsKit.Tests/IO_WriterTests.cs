@@ -254,7 +254,7 @@ public class IO_WriterTests
     }
 
     [TestMethod]
-    public void WriteOnlyStreamTest()
+    public void WriteOnlyStreamTestLSB()
     {
         byte[] expected = new byte[10];
 
@@ -269,6 +269,43 @@ public class IO_WriterTests
             Helpers.WriteBitsLSB(expected, bitOffset, value, bitCount);
 
             bitStreamWriter.WriteUInt64LSB(value, bitCount);
+
+            bitOffset += bitCount;
+
+            // BitStreamWriter buffers partially written bytes
+            // so only comparing the number of whole bytes written
+            int byteCount = bitOffset >> 3;
+
+            CollectionAssert.AreEqual(expected[..byteCount], ms.GetBuffer(byteCount), "BitStreamWriter");
+
+            Assert.AreEqual(bitOffset, bitStreamWriter.Position, "BitStreamWriter.Position");
+        }
+
+        // write remaining bits to stream
+        bitStreamWriter.Flush();
+
+        CollectionAssert.AreEqual(expected, ms.GetBuffer((int)ms.Length), "BitStreamWriter");
+
+        // check we can't seek or buffer
+        Assert.ThrowsException<NotSupportedException>(() => bitStreamWriter.Position = 0);
+    }
+
+    [TestMethod]
+    public void WriteOnlyStreamTestMSB()
+    {
+        byte[] expected = new byte[10];
+
+        using WriteOnlyMemoryStream ms = new();
+        using BitStreamWriter bitStreamWriter = new(ms);
+
+        ulong value = Unsafe.ReadUnaligned<ulong>(ref Data[2]);
+
+        int bitOffset = 0;
+        foreach (int bitCount in BitCounts)
+        {
+            Helpers.WriteBitsMSB(expected, bitOffset, value, bitCount);
+
+            bitStreamWriter.WriteUInt64MSB(value, bitCount);
 
             bitOffset += bitCount;
 
