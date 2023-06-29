@@ -21,7 +21,7 @@ public sealed class BitStreamWriter : IDisposable
     /// <exception cref="NotSupportedException"></exception>
     public long Position
     {
-        get => (_bytePos << 3) + _bitsPos;
+        get => (_stream.Position << 3) + _bitsPos;
         set => SetPosition(value);
     }
 
@@ -32,7 +32,6 @@ public sealed class BitStreamWriter : IDisposable
 
     private Stream _stream;
     private byte _buffer;
-    private long _bytePos;
     private int _bitsPos;
 
     private readonly bool _leaveOpen;
@@ -49,7 +48,6 @@ public sealed class BitStreamWriter : IDisposable
 
         _stream = source;
         _leaveOpen = leaveOpen;
-        _bytePos = source.Position;
 
         ResetBuffer();
     }
@@ -80,7 +78,6 @@ public sealed class BitStreamWriter : IDisposable
         if (_bitsPos != 0)
         {
             _stream.WriteByte(_buffer);
-            _bytePos++;
             _bitsPos = 0;
             ResetBuffer();
         }
@@ -111,7 +108,7 @@ public sealed class BitStreamWriter : IDisposable
     /// <inheritdoc cref="MemoryBitWriter.WriteBitLSB"/>
     public void WriteBitLSB(bool value)
     {
-        Span<byte> buffer = stackalloc byte[2];
+        Span<byte> buffer = stackalloc byte[1];
         PopulateWriteBuffer(buffer);
 
         BitPrimitives.WriteBitLSB(buffer, _bitsPos, value);
@@ -121,7 +118,7 @@ public sealed class BitStreamWriter : IDisposable
     /// <inheritdoc cref="MemoryBitWriter.WriteBitMSB"/>
     public void WriteBitMSB(bool value)
     {
-        Span<byte> buffer = stackalloc byte[2];
+        Span<byte> buffer = stackalloc byte[1];
         PopulateWriteBuffer(buffer);
 
         BitPrimitives.WriteBitMSB(buffer, _bitsPos, value);
@@ -302,11 +299,12 @@ public sealed class BitStreamWriter : IDisposable
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void PopulateWriteBuffer(Span<byte> buffer)
     {
         // if this is a mid-stream write then populate the buffer
         // with the existing data to allow writing in-place
-        if (_bytePos < _stream.Length)
+        if (_stream.Position < _stream.Length)
         {
             int read = _stream.Read(buffer);
             _stream.Position -= read;
@@ -326,7 +324,7 @@ public sealed class BitStreamWriter : IDisposable
         if (writeLen != 0)
             _stream.Write(buffer[..writeLen]);
 
-        Position += bitCount;
+        _bitsPos = (_bitsPos + bitCount) & 7;
 
         // buffer any unprocessed bits
         if (_bitsPos != 0)
@@ -338,22 +336,21 @@ public sealed class BitStreamWriter : IDisposable
         if (position < 0)
             throw new ArgumentOutOfRangeException(nameof(position));
 
-        // get the new stream position
-        long newBytePos = position >> 3;
+        // calculate offsets
+        int bytePos = (int)(position >> 3);
+        int bitsPos = (int)(position & 7);
 
         // check if this is a Seek operation
-        if (newBytePos != _stream.Position)
+        if ((position + 7) >> 3 != _stream.Position)
         {
             // write any buffered bits
             Flush();
             // update the stream position
-            _stream.Position = newBytePos;
+            _stream.Position = bytePos;
             // and repopulate the buffer
             ResetBuffer();
         }
 
-        // update internal positions
-        _bytePos = newBytePos;
-        _bitsPos = (int)(position & 7);
+        _bitsPos = bitsPos;
     }
 }
