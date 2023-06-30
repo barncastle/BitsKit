@@ -1,4 +1,8 @@
-﻿Rule ID | Category | Severity | Notes
+﻿## Release 1.0
+
+### New Rules
+
+Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
 BITSKIT001 | BitsKit.Generator | Error | BitsKit object must be partial
 BITSKIT002 | BitsKit.Generator | Error | BitsKit object must not be a nested type
