@@ -6,6 +6,9 @@ namespace BitsKit.Generator;
 
 internal static class Extensions
 {
+    /// <summary>
+    /// Prefixes indents to a line before appending it to the end of the StringBuilder object
+    /// </summary>
     public static StringBuilder AppendIndentedLine(this StringBuilder builder, byte level, string text, params object?[]? args)
     {
         builder.Append(' ', level * 4);
@@ -18,12 +21,15 @@ internal static class Extensions
         return builder;
     }
 
+    /// <summary>
+    /// Truncates a StringBuilder from the last newline
+    /// </summary>
     public static StringBuilder RemoveLastLine(this StringBuilder builder)
     {
         int i;
         for (i = builder.Length - 1; i != 0; i--)
         {
-            // find last newline char
+            // find the last newline char
             if (builder[i] == '\n')
             {
                 // remove the carriage return too
