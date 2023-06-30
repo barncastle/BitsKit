@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
@@ -73,27 +72,9 @@ public sealed class BitObjectGenerator : IIncrementalGenerator
                 if (processor.EnumerateFields() == 0)
                     continue;
 
-                // check and report any compilation issues
-                DiagnosticDescriptor? diagnosticError = processor switch
-                {
-                    _ when IsNotPartial(processor.TypeDeclaration) => DiagnosticDescriptors.MustBePartial,
-                    _ when IsNested(processor.TypeDeclaration) => DiagnosticDescriptors.NestedNotAllowed,
-                    _ when HasMissingFieldTypes(processor) => DiagnosticDescriptors.BitFieldTypeNotDefined,
-                    _ when HasConflictingAccessors(processor) => DiagnosticDescriptors.ConflictingAccessors,
-                    _ when HasConflictingSetters(processor) => DiagnosticDescriptors.ConflictingSetters,
-                    _ => null
-                };
-
-                if (diagnosticError is not null)
-                {
-                    context.ReportDiagnostic(Diagnostic.Create(
-                        diagnosticError,
-                        processor.TypeDeclaration.Identifier.GetLocation(),
-                        processor.TypeSymbol.Name));
-                }
-
-                // prevent code generation on error severity issues
-                if (diagnosticError is { DefaultSeverity: DiagnosticSeverity.Error })
+                // check and report any compilation issues and prevent
+                // code generation for this type if there are
+                if (processor.ReportCompilationIssues(context))
                     continue;
 
                 processor.GenerateCSharpSource(stringBuilder);
@@ -112,21 +93,6 @@ public sealed class BitObjectGenerator : IIncrementalGenerator
 
     private static bool IsValidTypeDeclaration(SyntaxNode node, CancellationToken _) =>
         node is ClassDeclarationSyntax or StructDeclarationSyntax or RecordDeclarationSyntax;
-
-    private static bool IsNotPartial(TypeDeclarationSyntax typeDeclaration) =>
-        !typeDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
-
-    private static bool IsNested(TypeDeclarationSyntax typeDeclaration) =>
-        typeDeclaration.Parent is TypeDeclarationSyntax;
-
-    private static bool HasMissingFieldTypes(TypeSymbolProcessor processor) =>
-        processor.Fields.Any(f => f.FieldType is null);
-
-    private static bool HasConflictingAccessors(TypeSymbolProcessor processor) =>
-        processor.Fields.Any(f => !Enum.IsDefined(typeof(BitFieldModifiers), f.Modifiers & BitFieldModifiers.AccessorMask));
-
-    private static bool HasConflictingSetters(TypeSymbolProcessor processor) =>
-        processor.Fields.Any(f => !Enum.IsDefined(typeof(BitFieldModifiers), f.Modifiers & BitFieldModifiers.SetterMask));
 }
 
 file class TypeSymbolProcessorComparer : IEqualityComparer<TypeSymbolProcessor?>

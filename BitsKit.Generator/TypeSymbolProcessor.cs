@@ -22,7 +22,7 @@ internal sealed class TypeSymbolProcessor
         _typeSymbol = typeSymbol;
         _typeDeclaration = typeDeclaration;
         _defaultBitOrder = (BitOrder)attribute.ConstructorArguments[0].Value!;
-    }
+    }       
 
     public void GenerateCSharpSource(StringBuilder sb)
     {
@@ -70,6 +70,25 @@ internal sealed class TypeSymbolProcessor
         }
 
         return _fields.Count;
+    }
+
+    public bool ReportCompilationIssues(SourceProductionContext context)
+    {
+        bool hasCompilationIssues = false;
+
+        if (DiagnosticValidator.IsNotPartial(context, _typeDeclaration, _typeSymbol.Name) | 
+            DiagnosticValidator.IsNested(context, _typeDeclaration, _typeSymbol.Name))
+            hasCompilationIssues = true;
+
+        foreach (BitFieldModel field in _fields)
+        {
+            if (DiagnosticValidator.HasMissingFieldType(context, field, _typeSymbol.Name) | 
+                DiagnosticValidator.HasConflictingAccessors(context, field, _typeSymbol.Name) |
+                DiagnosticValidator.HasConflictingSetters(context, field, _typeSymbol.Name))
+                hasCompilationIssues = true;
+        }
+
+        return hasCompilationIssues;
     }
 
     private void CreateBitFieldModels(IFieldSymbol backingField, BackingFieldType backingType)

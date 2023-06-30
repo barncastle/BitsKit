@@ -22,10 +22,10 @@ internal static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
-    public static readonly DiagnosticDescriptor BitFieldTypeNotDefined = new(
+    public static readonly DiagnosticDescriptor FieldTypeNotDefined = new(
         id: "BITSKIT003",
         title: "Cannot infer FieldType",
-        messageFormat: "'{0}' contains one or more fields without an inferable BitFieldType",
+        messageFormat: "'{0}.{1}' FieldType cannot be inferred",
         category: Category,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
@@ -33,7 +33,7 @@ internal static class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor ConflictingAccessors = new(
         id: "BITSKIT004",
         title: "Conflicting accessability modifiers",
-        messageFormat: "'{0}' contains one or more fields with conflicting accessors",
+        messageFormat: "'{0}.{1}' has conflicting accessor modifiers",
         category: Category,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
@@ -41,7 +41,7 @@ internal static class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor ConflictingSetters = new(
         id: "BITSKIT005",
         title: "Conflicting setter modifiers",
-        messageFormat: "'{0}' contains one or more fields with conflicting setter modifiers",
+        messageFormat: "'{0}.{1}' has conflicting setter modifiers",
         category: Category,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
