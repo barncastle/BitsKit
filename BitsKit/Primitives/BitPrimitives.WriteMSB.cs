@@ -88,7 +88,7 @@ public static partial class BitPrimitives
 
     /// <summary>
     /// Writes a <paramref name="bitCount"/> sized, most significant bit, <paramref name="value"/>
-    /// to a <see cref="byte"/> at the specified <paramref name="bitOffset"/>
+    /// to a <see cref="long"/> at the specified <paramref name="bitOffset"/>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/> 
     public static void WriteInt64MSB(ref long destination, int bitOffset, long value, int bitCount)
