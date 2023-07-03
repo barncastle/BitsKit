@@ -10,7 +10,7 @@ public class BitFieldAttribute : Attribute
     /// The name of the bit-field that is being declared
     /// <remark>
     /// <para>
-    /// Null or empty will generate padding bits
+    /// A Null or empty value will generate padding bits
     /// </para>
     /// </remark>
     /// </summary>

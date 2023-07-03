@@ -57,7 +57,7 @@ internal class MultipleRuntimesConfig : ManualConfig
         AddExporter(DefaultExporters.Plain);
         AddColumnProvider(DefaultColumnProviders.Instance);        
 
-        if(filters?.Length > 0)
+        if (filters?.Length > 0)
             AddFilter(new AllCategoriesFilter(filters));
 
         SummaryStyle = new SummaryStyle(null, true, SizeUnit.B, TimeUnit.Nanosecond);

@@ -6,8 +6,7 @@
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
 public sealed class BooleanFieldAttribute : BitFieldAttribute
 {
-    public BooleanFieldAttribute(string name) : 
-        base(name, 1, BitFieldType.Boolean)
+    public BooleanFieldAttribute(string name) : base(name, 1, BitFieldType.Boolean)
     {
     }
 }
