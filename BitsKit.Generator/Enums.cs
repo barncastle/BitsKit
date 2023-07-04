@@ -68,26 +68,40 @@ internal enum BitFieldModifiers
     /// </summary>
     Public = 0x01,
     /// <summary>
-    /// Specifies the property is internal
-    /// </summary>
-    Internal = 0x02,
-    /// <summary>
     /// Specifies the property is private
     /// </summary>
-    Private = 0x04,
+    Private = 0x02,
+    /// <summary>
+    /// Specifies the property is protected
+    /// </summary>
+    Protected = 0x04,
+    /// <summary>
+    /// Specifies the property is internal
+    /// </summary>
+    Internal = 0x08,
     /// <summary>
     /// Specifies the property is readonly
     /// </summary>
-    ReadOnly = 0x08,
+    ReadOnly = 0x10,
     /// <summary>
     /// Specifies the property is init only
     /// </summary>
-    InitOnly = 0x10,
+    InitOnly = 0x20,
     /// <summary>
     /// Specifies the property is required
     /// </summary>
-    Required = 0x20,
+    Required = 0x40,
 
-    AccessorMask = Public | Internal | Private,
+    /// <summary>
+    /// Specifies the property is protected internal
+    /// </summary>
+    ProtectedInternal = Protected | Internal,
+
+    /// <summary>
+    /// Specifies the property is private protected
+    /// </summary>
+    PrivateProtected = Private | Protected,
+
+    AccessorMask = Public | Private | Protected | Internal,
     SetterMask = ReadOnly | InitOnly
 }

@@ -51,7 +51,11 @@ internal static class DiagnosticValidator
 
     public static bool HasConflictingAccessors(SourceProductionContext context, BitFieldModel bitField, string typeName)
     {
-        int modifiers = (int)(bitField.Modifiers & BitFieldModifiers.AccessorMask);
+        BitFieldModifiers modifiers = bitField.Modifiers & BitFieldModifiers.AccessorMask;
+
+        // "protected internal" and "private protected" combos are allowed
+        if (modifiers is BitFieldModifiers.ProtectedInternal or BitFieldModifiers.PrivateProtected)
+            return false;
 
         return (modifiers & (modifiers - 1)) != 0
             && ReportDiagnostic(
@@ -64,7 +68,7 @@ internal static class DiagnosticValidator
 
     public static bool HasConflictingSetters(SourceProductionContext context, BitFieldModel bitField, string typeName)
     {
-        int modifiers = (int)(bitField.Modifiers & BitFieldModifiers.SetterMask);
+        BitFieldModifiers modifiers = bitField.Modifiers & BitFieldModifiers.SetterMask;
 
         return (modifiers & (modifiers - 1)) != 0
             && ReportDiagnostic(

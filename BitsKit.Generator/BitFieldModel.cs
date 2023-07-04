@@ -57,8 +57,11 @@ internal sealed class BitFieldModel
         string accessor = (Modifiers & BitFieldModifiers.AccessorMask) switch
         {
             BitFieldModifiers.Public => "public",
-            BitFieldModifiers.Internal => "internal",
             BitFieldModifiers.Private => "private",
+            BitFieldModifiers.Protected => "protected",
+            BitFieldModifiers.Internal => "internal",
+            BitFieldModifiers.ProtectedInternal => "protected internal",
+            BitFieldModifiers.PrivateProtected => "private protected",
             _ => "public",
         };
 

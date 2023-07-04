@@ -247,7 +247,7 @@ public class GeneratorTests
     {
         string source = @"
         [BitObject(BitOrder.LeastSignificant)]
-        public unsafe ref partial struct BitFieldGeneratorTest
+        public unsafe partial class BitFieldGeneratorTest
         {
             [BitField(""Generated01"", 2, Modifiers = BitFieldModifiers.Public)]
             [BitField(2)]
@@ -256,6 +256,9 @@ public class GeneratorTests
             [BitField(""Generated04"", 2, Modifiers = BitFieldModifiers.ReadOnly)]
             [BitField(""Generated05"", 2, Modifiers = BitFieldModifiers.InitOnly)]
             [BitField(""Generated06"", 2, ReverseBitOrder = true)]
+            [BitField(""Generated07"", 2, Modifiers = BitFieldModifiers.Protected)]
+            [BitField(""Generated08"", 2, Modifiers = BitFieldModifiers.ProtectedInternal)]
+            [BitField(""Generated09"", 2, Modifiers = BitFieldModifiers.PrivateProtected)]
             public int BackingField00;
 
             [BitField(""Generated10"", 2, BitFieldType.SByte)]
@@ -269,12 +272,12 @@ public class GeneratorTests
             [BitField(""Generated17"", 2, BitFieldType.UInt64)]
             [BitField(""Generated18"", 2, BitFieldType.IntPtr)]
             [BitField(""Generated19"", 2, BitFieldType.UIntPtr)]
-            public Span<byte> BackingField01;
+            public byte[] BackingField01;
         }
         ";
 
         string expected = @"
-        public unsafe ref partial struct  BitFieldGeneratorTest
+        public unsafe partial class  BitFieldGeneratorTest
         {
             public  Int32 Generated01 
             {
@@ -309,6 +312,24 @@ public class GeneratorTests
             {
                 get => BitPrimitives.ReadInt32MSB(BackingField00, 12, 2);
                 set => BitPrimitives.WriteInt32MSB(ref BackingField00, 12, value, 2);
+            }
+
+            protected  Int32 Generated07 
+            {
+                get => BitPrimitives.ReadInt32LSB(BackingField00, 14, 2);
+                set => BitPrimitives.WriteInt32LSB(ref BackingField00, 14, value, 2);
+            }
+
+            protected internal  Int32 Generated08 
+            {
+                get => BitPrimitives.ReadInt32LSB(BackingField00, 16, 2);
+                set => BitPrimitives.WriteInt32LSB(ref BackingField00, 16, value, 2);
+            }
+
+            private protected  Int32 Generated09 
+            {
+                get => BitPrimitives.ReadInt32LSB(BackingField00, 18, 2);
+                set => BitPrimitives.WriteInt32LSB(ref BackingField00, 18, value, 2);
             }
 
             public  SByte Generated10 
@@ -384,7 +405,7 @@ public class GeneratorTests
 #if NET7_0_OR_GREATER
         string source = @"
         [BitObject(BitOrder.LeastSignificant)]
-        public unsafe ref partial struct BitFieldGeneratorTest
+        public unsafe partial class BitFieldGeneratorTest
         {
             [BitField(""Generated01"", 2, Modifiers = BitFieldModifiers.Public)]
             [BitField(2)]
@@ -394,12 +415,15 @@ public class GeneratorTests
             [BitField(""Generated05"", 2, Modifiers = BitFieldModifiers.InitOnly)]
             [BitField(""Generated06"", 2, ReverseBitOrder = true)]
             [BitField(""Generated07"", 2, Modifiers = BitFieldModifiers.Required)]
+            [BitField(""Generated08"", 2, Modifiers = BitFieldModifiers.Protected)]
+            [BitField(""Generated09"", 2, Modifiers = BitFieldModifiers.ProtectedInternal)]
+            [BitField(""Generated0A"", 2, Modifiers = BitFieldModifiers.PrivateProtected)]
             public int BackingField00;
         }
         ";
 
         string expected = @"
-        public unsafe ref partial struct  BitFieldGeneratorTest
+        public unsafe partial class  BitFieldGeneratorTest
         {
             public  Int32 Generated01 
             {
@@ -440,6 +464,24 @@ public class GeneratorTests
             {
                 get => BitPrimitives.ReadInt32LSB(BackingField00, 14, 2);
                 set => BitPrimitives.WriteInt32LSB(ref BackingField00, 14, value, 2);
+            }
+
+            protected Int32 Generated08 
+            {
+                get => BitPrimitives.ReadInt32LSB(BackingField00, 16, 2);
+                set => BitPrimitives.WriteInt32LSB(ref BackingField00, 16, value, 2);
+            }
+
+            protected internal Int32 Generated09 
+            {
+                get => BitPrimitives.ReadInt32LSB(BackingField00, 18, 2);
+                set => BitPrimitives.WriteInt32LSB(ref BackingField00, 18, value, 2);
+            }
+
+            private protected Int32 Generated0A 
+            {
+                get => BitPrimitives.ReadInt32LSB(BackingField00, 20, 2);
+                set => BitPrimitives.WriteInt32LSB(ref BackingField00, 20, value, 2);
             }
         }
         ";
@@ -535,6 +577,8 @@ public class GeneratorTests
         GeneratorDriver driver = CSharpGeneratorDriver
            .Create(generator)
            .RunGeneratorsAndUpdateCompilation(compilation, out Compilation? outputCompilation, out ImmutableArray<Diagnostic> diagnostics);
+
+        var diag = outputCompilation.GetDiagnostics();
 
         Assert.IsTrue(diagnostics.IsEmpty); // there were no diagnostics created by the generators
         Assert.AreEqual(outputCompilation.SyntaxTrees.Count(), 2); // we have two syntax trees, the original 'user' provided one, and the one added by the generator
