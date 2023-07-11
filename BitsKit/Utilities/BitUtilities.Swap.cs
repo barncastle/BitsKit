@@ -3,9 +3,8 @@
 public static partial class BitUtilities
 {
     /// <summary>
-    /// Swaps a <paramref name="bitCount"/> sized range of bits from
-    /// <paramref name="offsetA"/> with an equally sized range at
-    /// <paramref name="offsetB"/>
+    /// Swaps the position of two <paramref name="bitCount"/> sized ranges of bits 
+    /// within an integral value
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static sbyte SwapBits(sbyte value, int offsetA, int offsetB, int bitCount)
