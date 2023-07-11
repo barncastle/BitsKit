@@ -4,19 +4,6 @@ namespace BitsKit.Utilities;
 
 public static partial class BitUtilities
 {
-    [DoesNotReturn]
-    private static void ThrowArgumentOutOfRangeException(string paramName) => 
-        throw new ArgumentOutOfRangeException(paramName);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void ValidateArgs(int bitOffset, int bitCount, int maxBits)
-    {
-        if (bitCount < 0 || bitCount > maxBits)
-            ThrowArgumentOutOfRangeException(nameof(bitCount));
-        if (bitOffset < 0 || bitOffset > maxBits)
-            ThrowArgumentOutOfRangeException(nameof(bitOffset));
-    }
-
     private static readonly byte[] UInt8BitReverseTable = new byte[]
     {
         0x00, 0x80, 0x40, 0xC0, 0x20, 0xA0, 0x60, 0xE0, 0x10, 0x90, 0x50, 0xD0, 0x30, 0xB0, 0x70, 0xF0,

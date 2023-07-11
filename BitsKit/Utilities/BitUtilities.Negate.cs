@@ -37,8 +37,6 @@ public static partial class BitUtilities
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte NegateBits(byte value, int bitOffset, int bitCount)
     {
-        ValidateArgs(bitOffset, bitCount, 8);
-
         return (byte)NegateBitsBase(value, bitOffset, bitCount, 8);
     }
 
@@ -46,8 +44,6 @@ public static partial class BitUtilities
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ushort NegateBits(ushort value, int bitOffset, int bitCount)
     {
-        ValidateArgs(bitOffset, bitCount, 16);
-
         return (ushort)NegateBitsBase(value, bitOffset, bitCount, 16);
     }
 
@@ -55,8 +51,6 @@ public static partial class BitUtilities
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint NegateBits(uint value, int bitOffset, int bitCount)
     {
-        ValidateArgs(bitOffset, bitCount, 32);
-
         return NegateBitsBase(value, bitOffset, bitCount, 32);
     }
 
@@ -64,8 +58,6 @@ public static partial class BitUtilities
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong NegateBits(ulong value, int bitOffset, int bitCount)
     {
-        ValidateArgs(bitOffset, bitCount, 64);
-
         if (bitCount == 0)
             return value;
 
