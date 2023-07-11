@@ -84,16 +84,13 @@ public class UtilityTests
     [TestMethod]
     public void BitMergeTest()
     {
-        //Assert.AreEqual(0b11001110, BitUtilities.MergeBits((byte)0b10101110, (byte)0b11001010, 0b11110000));
+        uint a = 0b10101110;
+        uint b = 0b11001010;
 
-        //// Test MergeBits method
-        //Assert.AreEqual((sbyte)11, BitUtilities.MergeBits((sbyte)9, (sbyte)3, (byte)4));
-        //Assert.AreEqual((short)1028, BitUtilities.MergeBits((short)960, (short)132, (ushort)1088));
-        //Assert.AreEqual(1000000011, BitUtilities.MergeBits(1000000000, 11, 10));
-        //Assert.AreEqual(9223372036854775851, BitUtilities.MergeBits(9223372036854775807, 4, 4));
-        //Assert.AreEqual((byte)30, BitUtilities.MergeBits((byte)18, (byte)15, (byte)12));
-        //Assert.AreEqual((ushort)1389, BitUtilities.MergeBits((ushort)409, (ushort)1523, (ushort)1300));
-        //Assert.AreEqual(4026531854, BitUtilities.MergeBits(268435455, 4026531854, 1));
-        //Assert.AreEqual(9223372036854775819, BitUtilities.MergeBits(9223372036854775807, 4, 4));
+        Assert.AreEqual(0b11001110u, BitUtilities.MergeBits(a, b, 0b11110000));
+        Assert.AreEqual(0b11101010u, BitUtilities.MergeBits(a, b, 0b01010101));
+
+        Assert.AreEqual(0b11001110UL, BitUtilities.MergeBits((ulong)a, b, 0b11110000UL));
+        Assert.AreEqual(0b11101010UL, BitUtilities.MergeBits((ulong)a, b, 0b01010101UL));
     }
 }
