@@ -93,4 +93,22 @@ public class UtilityTests
         Assert.AreEqual(0b11001110UL, BitUtilities.MergeBits((ulong)a, b, 0b11110000UL));
         Assert.AreEqual(0b11101010UL, BitUtilities.MergeBits((ulong)a, b, 0b01010101UL));
     }
+
+    [TestMethod]
+    public void BitSwapTest()
+    {
+        uint uint32 = 0b1100_1101;
+        Assert.AreEqual(0b1100_1101u, BitUtilities.SwapBits(uint32, 0, 0, 2));
+        Assert.AreEqual(0b1100_0111u, BitUtilities.SwapBits(uint32, 0, 2, 2));
+        Assert.AreEqual(0b1101_1100u, BitUtilities.SwapBits(uint32, 0, 4, 2));
+        Assert.AreEqual(0b0011_1101u, BitUtilities.SwapBits(uint32, 4, 6, 2));
+        Assert.AreEqual(0b1101_1100u, BitUtilities.SwapBits(uint32, 0, 4, 4));
+
+        ulong uint64 = 0b1100_1101;
+        Assert.AreEqual(0b1100_1101UL, BitUtilities.SwapBits(uint64, 0, 0, 2));
+        Assert.AreEqual(0b1100_0111UL, BitUtilities.SwapBits(uint64, 0, 2, 2));
+        Assert.AreEqual(0b1101_1100UL, BitUtilities.SwapBits(uint64, 0, 4, 2));
+        Assert.AreEqual(0b0011_1101UL, BitUtilities.SwapBits(uint64, 4, 6, 2));
+        Assert.AreEqual(0b1101_1100UL, BitUtilities.SwapBits(uint64, 0, 4, 4));
+    }
 }
