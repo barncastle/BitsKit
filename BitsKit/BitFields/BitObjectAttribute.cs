@@ -1,7 +1,7 @@
 ﻿namespace BitsKit.BitFields;
 
 /// <summary>
-/// An attribute that declares that an object contains bit-fields
+/// An attribute that declares an object contains bit-fields
 /// </summary>
 [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class, AllowMultiple = false)]
 public sealed class BitObjectAttribute : Attribute
