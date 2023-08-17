@@ -499,21 +499,17 @@ public class GeneratorTests
         [BitObject(BitOrder.LeastSignificant)]
         public unsafe ref partial struct BooleanGeneratorTest
         {
-            [BitField(""Generated01"", 2, BitFieldType.Boolean)]
-            [BitField(""Generated02"", 2)]
+            [BooleanField(""Generated01"")]
             public int BackingField00;
 
-            [BitField(""Generated10"", 2, BitFieldType.Boolean)]
+            [BooleanField(""Generated10"")]
             public Span<byte> BackingField01;
 
-            [BitField(""Generated20"", 2, BitFieldType.Boolean)]
+            [BooleanField(""Generated20"")]
             public ReadOnlySpan<byte> BackingField02;
 
-            [BitField(""Generated30"", 2, BitFieldType.Boolean)]
+            [BooleanField(""Generated30"")]
             public fixed byte BackingField03[4];
-
-            [BooleanField(""Generated40"")]
-            public byte BackingField04;
         }
         ";
 
@@ -524,12 +520,6 @@ public class GeneratorTests
             {
                 get => BitPrimitives.ReadInt32LSB(BackingField00, 0, 1) == 1;
                 set => BitPrimitives.WriteInt32LSB(ref BackingField00, 0, (Int32)(value ? 1 : 0), 1);
-            }
-
-            public  Int32 Generated02 
-            {
-                get => BitPrimitives.ReadInt32LSB(BackingField00, 2, 2);
-                set => BitPrimitives.WriteInt32LSB(ref BackingField00, 2, value, 2);
             }
 
             public  Boolean Generated10 
@@ -547,12 +537,6 @@ public class GeneratorTests
             {
                 get => BitPrimitives.ReadBitLSB(MemoryMarshal.CreateReadOnlySpan(ref BackingField03[0], 4), 0);
                 set => BitPrimitives.WriteBitLSB(MemoryMarshal.CreateSpan(ref BackingField03[0], 4), 0, value);
-            }
-
-            public  Boolean Generated40 
-            {
-                get => BitPrimitives.ReadUInt8LSB(BackingField04, 0, 1) == 1;
-                set => BitPrimitives.WriteUInt8LSB(ref BackingField04, 0, (Byte)(value ? 1 : 0), 1);
             }
         }
         ";

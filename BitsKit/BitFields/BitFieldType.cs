@@ -14,6 +14,5 @@ public enum BitFieldType
     Int64,
     UInt64,
     IntPtr,
-    UIntPtr,
-    Boolean
+    UIntPtr
 }
