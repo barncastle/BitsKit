@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace BitsKit.Utilities;
+﻿namespace BitsKit.Utilities;
 
 public static partial class BitUtilities
 {
