@@ -516,24 +516,24 @@ public class GeneratorTests
         string expected = @"
         public unsafe ref partial struct  BooleanGeneratorTest
         {
-            public  Boolean Generated01 
+            public  System.Boolean Generated01 
             {
                 get => BitPrimitives.ReadInt32LSB(BackingField00, 0, 1) == 1;
                 set => BitPrimitives.WriteInt32LSB(ref BackingField00, 0, (Int32)(value ? 1 : 0), 1);
             }
 
-            public  Boolean Generated10 
+            public  System.Boolean Generated10 
             {
                 get => BitPrimitives.ReadBitLSB(BackingField01, 0);
                 set => BitPrimitives.WriteBitLSB(BackingField01, 0, value);
             }
 
-            public  Boolean Generated20 
+            public  System.Boolean Generated20 
             {
                 get => BitPrimitives.ReadBitLSB(BackingField02, 0);
             }
 
-            public unsafe  Boolean Generated30 
+            public unsafe  System.Boolean Generated30 
             {
                 get => BitPrimitives.ReadBitLSB(MemoryMarshal.CreateReadOnlySpan(ref BackingField03[0], 4), 0);
                 set => BitPrimitives.WriteBitLSB(MemoryMarshal.CreateSpan(ref BackingField03[0], 4), 0, value);

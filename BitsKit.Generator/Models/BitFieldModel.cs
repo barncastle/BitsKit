@@ -2,15 +2,13 @@
 using System.Text;
 using Microsoft.CodeAnalysis;
 
-namespace BitsKit.Generator;
+namespace BitsKit.Generator.Models;
 
-/// <summary>
-/// A model representing a bit-field to be generated
-/// </summary>
-internal sealed class BitFieldModel
+internal abstract class BitFieldModel
 {
-    public string Name { get; private set; } = null!;
+    public string Name { get; set; } = null!;
     public BitFieldType? FieldType { get; set; }
+    public Type? ReturnType { get; set; }
     public IFieldSymbol BackingField { get; set; } = null!;
     public BackingFieldType BackingFieldType { get; set; }
     public int BitOffset { get; set; }
@@ -18,20 +16,9 @@ internal sealed class BitFieldModel
     public BitOrder BitOrder { get; set; }
     public bool ReverseBitOrder { get; }
     public BitFieldModifiers Modifiers { get; }
-    public bool IsBoolean { get; }
 
-    public BitFieldModel(AttributeData attributeData, string attributeType)
+    public BitFieldModel(AttributeData attributeData)
     {
-        switch (attributeType)
-        {
-            case StringConstants.BitFieldAttributeFullName:
-                CreateFromBitFieldAttribute(attributeData);
-                break;
-            case StringConstants.BooleanFieldAttributeFullName:
-                CreateFromBooleanFieldAttribute(attributeData);
-                break;
-        }
-
         for (int i = 0; i < attributeData.NamedArguments.Length; i++)
         {
             switch (attributeData.NamedArguments[i].Key)
@@ -44,12 +31,6 @@ internal sealed class BitFieldModel
                     break;
             }
         }
-
-        if (string.IsNullOrEmpty(Name))
-            FieldType = BitFieldType.Padding;
-
-        if (FieldType == BitFieldType.Boolean)
-            IsBoolean = true;
     }
 
     public void GenerateCSharpSource(StringBuilder sb)
@@ -70,7 +51,7 @@ internal sealed class BitFieldModel
             GetPropertyTemplate(),
             accessor,
             Modifiers.HasFlag(BitFieldModifiers.Required) ? "required" : "",
-            IsBoolean ? BitFieldType.Boolean : FieldType,
+            ReturnType?.FullName ?? FieldType.ToString(),
             Name)
           .AppendIndentedLine(2, "{");
 
@@ -104,35 +85,6 @@ internal sealed class BitFieldModel
           .AppendLine();
     }
 
-    private void CreateFromBitFieldAttribute(AttributeData attributeData)
-    {
-        switch (attributeData.ConstructorArguments.Length)
-        {
-            case 1: // Padding constructor
-                BitCount = (byte)attributeData.ConstructorArguments[0].Value!;
-                break;
-            case 2: // Integral backed constructor
-                Name = (string)attributeData.ConstructorArguments[0].Value!;
-                BitCount = (byte)attributeData.ConstructorArguments[1].Value!;
-                break;
-            case 3: // Memory backed constructor
-                Name = (string)attributeData.ConstructorArguments[0].Value!;
-                BitCount = (byte)attributeData.ConstructorArguments[1].Value!;
-                FieldType = (BitFieldType)attributeData.ConstructorArguments[2].Value!;
-                break;
-        }
-    }
-
-    private void CreateFromBooleanFieldAttribute(AttributeData attributeData)
-    {
-        if (attributeData.ConstructorArguments.Length != 1)
-            return;
-
-        Name = (string)attributeData.ConstructorArguments[0].Value!;
-        BitCount = 1;
-        FieldType = BitFieldType.Boolean;
-    }
-
     /// <summary>
     /// Generates a template for the property accessors, type and name
     /// <para>
@@ -142,7 +94,7 @@ internal sealed class BitFieldModel
     /// {3} = <see cref="Name"/>
     /// </para> 
     /// </summary>
-    private string GetPropertyTemplate()
+    protected string GetPropertyTemplate()
     {
         return BackingFieldType switch
         {
@@ -165,26 +117,7 @@ internal sealed class BitFieldModel
     /// {5} = <see cref="BackingField"/>.FixedSize
     /// </para> 
     /// </summary>
-    private string GetGetterTemplate()
-    {
-        string source = BackingFieldType switch
-        {
-            BackingFieldType.Integral => "{2}",
-            BackingFieldType.Memory => "{2}.Span",
-            BackingFieldType.Span => "{2}",
-            BackingFieldType.Pointer => "MemoryMarshal.CreateReadOnlySpan(ref {2}[0], {5})",
-            _ => throw new NotSupportedException()
-        };
-
-        string getter = (BackingFieldType, IsBoolean) switch
-        {
-            { IsBoolean: false } => StringConstants.IntegralGetterTemplate,
-            { BackingFieldType: BackingFieldType.Integral } => StringConstants.BooleanGetterTemplate,
-            { BackingFieldType: not BackingFieldType.Integral } => StringConstants.BooleanSpanGetterTemplate,
-        };
-
-        return string.Format(getter, source);
-    }
+    protected abstract string GetGetterTemplate();
 
     /// <summary>
     /// Generates a template for the property setter
@@ -198,31 +131,12 @@ internal sealed class BitFieldModel
     /// {6} = <see cref="BackingField"/>.FixedSize
     /// </para> 
     /// </summary>
-    private string GetSetterTemplate()
-    {
-        string source = BackingFieldType switch
-        {
-            BackingFieldType.Integral => "ref {3}",
-            BackingFieldType.Memory => "{3}.Span",
-            BackingFieldType.Span => "{3}",
-            BackingFieldType.Pointer => "MemoryMarshal.CreateSpan(ref {3}[0], {6})",
-            _ => throw new NotSupportedException()
-        };
-
-        string setter = (BackingFieldType, IsBoolean) switch
-        {
-            { IsBoolean: false } => StringConstants.IntegralSetterTemplate,
-            { BackingFieldType: BackingFieldType.Integral } => StringConstants.BooleanSetterTemplate,
-            { BackingFieldType: not BackingFieldType.Integral } => StringConstants.BooleanSpanSetterTemplate,
-        };
-
-        return string.Format(setter, source, FieldType);
-    }
+    protected abstract string GetSetterTemplate();
 
     /// <summary>
     /// Determines if this field is ReadOnly based on it's BackingField and Modifiers
     /// </summary>
-    private bool IsReadOnly()
+    protected bool IsReadOnly()
     {
         string backingType = BackingField.Type.ToDisplayString();
 
@@ -231,4 +145,28 @@ internal sealed class BitFieldModel
                backingType == "System.ReadOnlyMemory<byte>" ||
                Modifiers.HasFlag(BitFieldModifiers.ReadOnly);
     }
+
+    /// <summary>
+    /// Gets the getter's source template based on it's BackingField
+    /// </summary>
+    protected string GetterSource() => BackingFieldType switch
+    {
+        BackingFieldType.Integral => "{2}",
+        BackingFieldType.Memory => "{2}.Span",
+        BackingFieldType.Span => "{2}",
+        BackingFieldType.Pointer => "MemoryMarshal.CreateReadOnlySpan(ref {2}[0], {5})",
+        _ => throw new NotSupportedException()
+    };
+
+    /// <summary>
+    /// Gets the setter's source template based on it's BackingField
+    /// </summary>
+    protected string SetterSource() => BackingFieldType switch
+    {
+        BackingFieldType.Integral => "ref {3}",
+        BackingFieldType.Memory => "{3}.Span",
+        BackingFieldType.Span => "{3}",
+        BackingFieldType.Pointer => "MemoryMarshal.CreateSpan(ref {3}[0], {6})",
+        _ => throw new NotSupportedException()
+    };
 }

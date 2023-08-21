@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
 using System.Text;
+using BitsKit.Generator.Models;
 
 namespace BitsKit.Generator;
 
@@ -99,16 +100,20 @@ internal sealed class TypeSymbolProcessor
         {
             string? attributeType = attribute.AttributeClass?.ToDisplayString();
 
-            if (!IsBitFieldAttribute(attributeType))
+            BitFieldModel? bitField = attributeType switch
+            {
+                StringConstants.BitFieldAttributeFullName => new IntegralFieldModel(attribute),
+                StringConstants.BooleanFieldAttributeFullName => new BooleanFieldModel(attribute),
+                _ => null
+            };
+
+            if(bitField == null)
                 continue;
 
-            BitFieldModel bitField = new(attribute, attributeType!)
-            {
-                BackingField = backingField,
-                BackingFieldType = backingType,
-                BitOffset = offset,
-                BitOrder = _defaultBitOrder,
-            };
+            bitField.BackingField = backingField;
+            bitField.BackingFieldType = backingType;
+            bitField.BitOffset = offset;
+            bitField.BitOrder = _defaultBitOrder;
 
             // padding fields are not generated
             if (bitField is not { FieldType: BitFieldType.Padding })
@@ -152,8 +157,4 @@ internal sealed class TypeSymbolProcessor
         SpecialType.System_UIntPtr => true,
         _ => false,
     };
-
-    private static bool IsBitFieldAttribute(string? attributeClass) => attributeClass is
-        StringConstants.BitFieldAttributeFullName or
-        StringConstants.BooleanFieldAttributeFullName;
 }
