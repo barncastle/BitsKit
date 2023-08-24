@@ -86,6 +86,16 @@ internal abstract class BitFieldModel
     }
 
     /// <summary>
+    /// Diagnoses if the field will produce non-compilable or erroneous code
+    /// </summary>
+    public virtual bool HasCompilationIssues(SourceProductionContext context, TypeSymbolProcessor processor)
+    {
+        return DiagnosticValidator.HasMissingFieldType(context, this, processor.TypeSymbol.Name) |
+               DiagnosticValidator.HasConflictingAccessors(context, this, processor.TypeSymbol.Name) |
+               DiagnosticValidator.HasConflictingSetters(context, this, processor.TypeSymbol.Name);
+    }
+
+    /// <summary>
     /// Generates a template for the property accessors, type and name
     /// <para>
     /// {0} = Accessor<br/>

@@ -83,9 +83,7 @@ internal sealed class TypeSymbolProcessor
 
         foreach (BitFieldModel field in _fields)
         {
-            if (DiagnosticValidator.HasMissingFieldType(context, field, _typeSymbol.Name) |
-                DiagnosticValidator.HasConflictingAccessors(context, field, _typeSymbol.Name) |
-                DiagnosticValidator.HasConflictingSetters(context, field, _typeSymbol.Name))
+            if (field.HasCompilationIssues(context, this))
                 hasCompilationIssues = true;
         }
 
