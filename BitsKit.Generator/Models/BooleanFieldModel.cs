@@ -15,7 +15,7 @@ internal sealed class BooleanFieldModel : BitFieldModel
         Name = (string)attributeData.ConstructorArguments[0].Value!;
         BitCount = 1;
         FieldType = BitFieldType.Boolean;
-        ReturnType = typeof(bool);
+        ReturnType = typeof(bool).FullName;
     }
 
     protected override string GetGetterTemplate()

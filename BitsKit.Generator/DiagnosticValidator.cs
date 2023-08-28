@@ -79,4 +79,15 @@ internal static class DiagnosticValidator
                 typeName,
                 bitField.Name);
     }
+
+    public static bool IsNotEnumType(SourceProductionContext context, EnumFieldModel enumField, string typeName)
+    {
+        return enumField.EnumType is not { EnumUnderlyingType: { } }
+            && ReportDiagnostic(
+                context,
+                DiagnosticDescriptors.EnumTypeExpected,
+                enumField.BackingField.Locations[0],
+                typeName,
+                enumField.Name);
+    }
 }

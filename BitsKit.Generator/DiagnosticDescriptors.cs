@@ -45,4 +45,12 @@ internal static class DiagnosticDescriptors
         category: Category,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor EnumTypeExpected = new(
+        id: "BITSKIT006",
+        title: "Enum type argument expected",
+        messageFormat: "'{0}.{1}' type argument is not an Enum",
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
 }

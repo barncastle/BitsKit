@@ -102,10 +102,11 @@ internal sealed class TypeSymbolProcessor
             {
                 StringConstants.BitFieldAttributeFullName => new IntegralFieldModel(attribute),
                 StringConstants.BooleanFieldAttributeFullName => new BooleanFieldModel(attribute),
+                StringConstants.EnumFieldAttributeFullName => new EnumFieldModel(attribute),
                 _ => null
             };
 
-            if(bitField == null)
+            if (bitField == null)
                 continue;
 
             bitField.BackingField = backingField;

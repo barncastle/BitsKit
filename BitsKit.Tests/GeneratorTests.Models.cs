@@ -107,3 +107,34 @@ public unsafe partial struct BitFieldFixedStruct
         set => Unsafe.WriteUnaligned(ref BackingField00[0], value);
     }
 }
+
+[BitObject(BitOrder.LeastSignificant)]
+[StructLayout(LayoutKind.Sequential)]
+public partial struct EnumBitFieldStruct
+{
+    [EnumField("Generated01", 2, typeof(TestEnum))]
+    [EnumField("Generated02", 2, typeof(TestEnum))]
+    public uint BackingField00;
+
+    [EnumField("Generated03", 2, typeof(TestEnum))]
+    [EnumField("Generated04", 2, typeof(TestEnum))]
+    public uint BackingField01;
+
+    [EnumField("Padding01", 2, typeof(TestEnum))]
+    [BitField(2)]
+    [EnumField("Padding02", 2, typeof(TestEnum))]
+    public uint BackingFieldPadding;
+
+    [EnumField("Generated07", 2, typeof(TestEnum))]
+    [BitField(2)]
+    [EnumField("Generated08", 2, typeof(TestEnum))]
+    public nuint BackingFieldUIntPtr;
+}
+
+[Flags]
+public enum TestEnum
+{
+    A = 1,
+    B = 2,
+    C = 4,
+}

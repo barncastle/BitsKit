@@ -8,7 +8,7 @@ internal abstract class BitFieldModel
 {
     public string Name { get; set; } = null!;
     public BitFieldType? FieldType { get; set; }
-    public Type? ReturnType { get; set; }
+    public string? ReturnType { get; set; }
     public IFieldSymbol BackingField { get; set; } = null!;
     public BackingFieldType BackingFieldType { get; set; }
     public int BitOffset { get; set; }
@@ -51,7 +51,7 @@ internal abstract class BitFieldModel
             GetPropertyTemplate(),
             accessor,
             Modifiers.HasFlag(BitFieldModifiers.Required) ? "required" : "",
-            ReturnType?.FullName ?? FieldType.ToString(),
+            ReturnType ?? FieldType.ToString(),
             Name)
           .AppendIndentedLine(2, "{");
 

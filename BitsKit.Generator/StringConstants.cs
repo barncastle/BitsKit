@@ -2,12 +2,13 @@
 
 internal static class StringConstants
 {
-    public const string BitFieldAttributeFullName = "BitsKit.BitFields.BitFieldAttribute";    
+    public const string BitFieldAttributeFullName = "BitsKit.BitFields.BitFieldAttribute";
     public const string BitFieldModifiersFullName = "BitsKit.BitFields.BitFieldModifiers";
     public const string BitFieldTypeFullName = "BitsKit.BitFields.BitFieldType";
     public const string BitObjectAttributeFullName = "BitsKit.BitFields.BitObjectAttribute";
     public const string BitOrderFullName = "BitsKit.BitFields.BitOrder";
     public const string BooleanFieldAttributeFullName = "BitsKit.BitFields.BooleanFieldAttribute";
+    public const string EnumFieldAttributeFullName = "BitsKit.BitFields.EnumFieldAttribute";
 
     /// <summary>
     /// Generated code header
@@ -53,6 +54,14 @@ internal static class StringConstants
     /// </summary>
     public const string IntegralGetterTemplate = "get => BitPrimitives.Read{{0}}{{1}}({0}, {{3}}, {{4}});";
     /// <summary>
+    /// Getter template for reading enum field bits
+    /// <para>
+    /// {0} = Source<br/>
+    /// {1} = Enum Type
+    /// </para>
+    /// </summary>
+    public const string EnumGetterTemplate = "get => ({1})BitPrimitives.Read{{0}}{{1}}({0}, {{3}}, {{4}});";
+    /// <summary>
     /// Getter template for reading a boolean from an integral
     /// <para>
     /// {0} = Source
@@ -74,6 +83,14 @@ internal static class StringConstants
     /// </para>
     /// </summary>
     public const string IntegralSetterTemplate = "{{0}} => BitPrimitives.Write{{1}}{{2}}({0}, {{4}}, value, {{5}});";
+    /// <summary>
+    /// Setter template for writing enum field bits
+    /// <para>
+    /// {0} = Source<br/>
+    /// {1} = Underlying Type
+    /// </para>
+    /// </summary>
+    public const string EnumSetterTemplate = "{{0}} => BitPrimitives.Write{{1}}{{2}}({0}, {{4}}, ({1})value, {{5}});";
     /// <summary>
     /// Setter template for writing a boolean to an integral
     /// <para>

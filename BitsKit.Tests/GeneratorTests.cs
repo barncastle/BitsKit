@@ -75,6 +75,15 @@ public class GeneratorTests
 
         Assert.AreEqual(fixedObj.IntValue00, Expected, "BitFieldFixedStruct.IntValue00 != Expected");
         Assert.AreEqual(fixedObj.BackingField01, 0, "BitFieldFixedStruct.BackingField01 != 0");
+
+        EnumBitFieldStruct enumObj = new()
+        {
+            Generated01 = (TestEnum)0b111,
+            Generated02 = (TestEnum)0b111,
+        };
+
+        Assert.AreEqual(enumObj.BackingField00, (uint)Expected, "EnumBitFieldStruct.BackingField00 != Expected");
+        Assert.AreEqual(enumObj.BackingField01, 0u, "EnumBitFieldStruct.BackingField01 != 0");
     }
 
     [TestMethod]
@@ -132,6 +141,14 @@ public class GeneratorTests
 
         Assert.AreEqual(fixedObj.Generated01, Expected01, "BitFieldFixedStruct.Generated01 != Expected01");
         Assert.AreEqual(fixedObj.Generated02, Expected02, "BitFieldFixedStruct.Generated02 != Expected02");
+
+        EnumBitFieldStruct enumObj = new()
+        {
+            BackingField00 = Input
+        };
+
+        Assert.AreEqual(enumObj.Generated01, TestEnum.B, "EnumBitFieldStruct.Generated01 != B");
+        Assert.AreEqual(enumObj.Generated02, TestEnum.A | TestEnum.B, "EnumBitFieldStruct.Generated02 != (A | B)");
     }
 
     [TestMethod]
@@ -154,6 +171,25 @@ public class GeneratorTests
 
         Assert.AreEqual(obj.Padding01, 1);
         Assert.AreEqual(obj.Padding02, 1);
+    }
+
+    [TestMethod]
+    public void EnumFieldTest()
+    {
+        const TestEnum Expected = TestEnum.A | TestEnum.B;
+
+        // set the fields to test the setters
+        EnumBitFieldStruct obj = new()
+        {
+            Generated01 = TestEnum.A | TestEnum.B | TestEnum.C
+        };
+
+        Assert.AreEqual(obj.Generated01, Expected);
+
+        obj.BackingField00 = 0b11111111;
+
+        Assert.AreEqual(obj.Generated01, Expected);
+        Assert.AreEqual(obj.Generated02, Expected);
     }
 
     [TestMethod]
@@ -537,6 +573,87 @@ public class GeneratorTests
             {
                 get => BitPrimitives.ReadBitLSB(MemoryMarshal.CreateReadOnlySpan(ref BackingField03[0], 4), 0);
                 set => BitPrimitives.WriteBitLSB(MemoryMarshal.CreateSpan(ref BackingField03[0], 4), 0, value);
+            }
+        }
+        ";
+
+        string? sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
+
+        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(sourceOutput, expected));
+    }
+
+    [TestMethod]
+    public void EnumMemberTest()
+    {
+        string source = @"
+        [BitObject(BitOrder.LeastSignificant)]
+        public unsafe ref partial struct EnumGeneratorTest
+        {
+            [EnumField(""Generated00"", 2, typeof(BitsKit.Tests.TestEnum))]
+            [EnumField(""Generated01"", 2, typeof(BitsKit.Tests.TestEnum))]
+            public int BackingField00;
+
+            [EnumField(""Generated10"", 2, typeof(BitsKit.Tests.TestEnum))]
+            [EnumField(""Generated11"", 2, typeof(BitsKit.Tests.TestEnum))]
+            public Span<byte> BackingField01;
+
+            [EnumField(""Generated20"", 2, typeof(BitsKit.Tests.TestEnum))]
+            [EnumField(""Generated21"", 2, typeof(BitsKit.Tests.TestEnum))]
+            public ReadOnlySpan<byte> BackingField02;
+
+            [EnumField(""Generated30"", 2, typeof(BitsKit.Tests.TestEnum))]
+            [EnumField(""Generated31"", 2, typeof(BitsKit.Tests.TestEnum))]
+            public fixed byte BackingField03[4];
+        }
+        ";
+
+        string expected = @"
+        public unsafe ref partial struct  EnumGeneratorTest
+        {
+            public  BitsKit.Tests.TestEnum Generated00 
+            {
+                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField00, 0, 2);
+                set => BitPrimitives.WriteInt32LSB(ref BackingField00, 0, (Int32)value, 2);
+            }
+
+            public  BitsKit.Tests.TestEnum Generated01 
+            {
+                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField00, 2, 2);
+                set => BitPrimitives.WriteInt32LSB(ref BackingField00, 2, (Int32)value, 2);
+            }
+
+            public  BitsKit.Tests.TestEnum Generated10 
+            {
+                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField01, 0, 2);
+                set => BitPrimitives.WriteInt32LSB(BackingField01, 0, (Int32)value, 2);
+            }
+
+            public  BitsKit.Tests.TestEnum Generated11 
+            {
+                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField01, 2, 2);
+                set => BitPrimitives.WriteInt32LSB(BackingField01, 2, (Int32)value, 2);
+            }
+
+            public  BitsKit.Tests.TestEnum Generated20 
+            {
+                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField02, 0, 2);
+            }
+
+            public  BitsKit.Tests.TestEnum Generated21 
+            {
+                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField02, 2, 2);
+            }
+
+            public unsafe  BitsKit.Tests.TestEnum Generated30 
+            {
+                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(MemoryMarshal.CreateReadOnlySpan(ref BackingField03[0], 4), 0, 2);
+                set => BitPrimitives.WriteInt32LSB(MemoryMarshal.CreateSpan(ref BackingField03[0], 4), 0, (Int32)value, 2);
+            }
+
+            public unsafe  BitsKit.Tests.TestEnum Generated31 
+            {
+                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(MemoryMarshal.CreateReadOnlySpan(ref BackingField03[0], 4), 2, 2);
+                set => BitPrimitives.WriteInt32LSB(MemoryMarshal.CreateSpan(ref BackingField03[0], 4), 2, (Int32)value, 2);
             }
         }
         ";
