@@ -150,7 +150,7 @@ public class GeneratorTests
         Assert.AreEqual(obj.BackingFieldPadding, Expected);
 
         // set the backing field to test getters
-        obj.BackingFieldPadding = 0b010001;
+        obj.BackingFieldPadding = 0b011101;
 
         Assert.AreEqual(obj.Padding01, 1);
         Assert.AreEqual(obj.Padding02, 1);
