@@ -9,21 +9,21 @@ public static partial class BitUtilities
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static sbyte NegateBits(sbyte value, int bitOffset, int bitCount)
     {
-        return (sbyte)NegateBits((ulong)(byte)value, bitOffset, bitCount);
+        return (sbyte)NegateBits((byte)value, bitOffset, bitCount);
     }
 
     /// <inheritdoc cref="NegateBits(sbyte, int, int)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static short NegateBits(short value, int bitOffset, int bitCount)
     {
-        return (short)NegateBits((ulong)(ushort)value, bitOffset, bitCount);
+        return (short)NegateBits((ushort)value, bitOffset, bitCount);
     }
 
     /// <inheritdoc cref="NegateBits(sbyte, int, int)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int NegateBits(int value, int bitOffset, int bitCount)
     {
-        return (int)NegateBits((ulong)(uint)value, bitOffset, bitCount);
+        return (int)NegateBits((uint)value, bitOffset, bitCount);
     }
 
     /// <inheritdoc cref="NegateBits(sbyte, int, int)"/>

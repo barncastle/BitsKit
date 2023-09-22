@@ -15,14 +15,14 @@ public partial class BitPrimitives
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static short ReverseBitOrder(short value)
     {
-        return (short)ReverseBitOrder((ulong)(ushort)value);
+        return (short)ReverseBitOrder((ushort)value);
     }
 
     /// <inheritdoc cref="ReverseBitOrder(sbyte)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ReverseBitOrder(int value)
     {
-        return (int)ReverseBitOrder((ulong)(uint)value);
+        return (int)ReverseBitOrder((uint)value);
     }
 
     /// <inheritdoc cref="ReverseBitOrder(sbyte)"/>
