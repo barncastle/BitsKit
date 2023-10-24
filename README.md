@@ -1,7 +1,7 @@
 # BitsKit
 BitsKit is a lightweight C# library that provides efficient bit-level reading, writing and manipulation. It also offers a collection of tools to simplify working with bits as well as bit field support.
 
-Reading and writing is supported for both, integral and memory types, targeting the two most common bit orders, Little Endian (LE) Least Significant (LSB) and Big Endian (BE) Most Significant (MSB).
+Reading and writing is supported for both, integral and memory types, targeting the two most common bit orders, Little Endian (LE) Least Significant Bit (LSB) and Big Endian (BE) Most Significant Bit (MSB).
 
 BitsKit also provides the ability to add bit fields to types, not dissimilar to those found within the C/C++ languages.
 
