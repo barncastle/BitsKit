@@ -46,7 +46,7 @@ public class BitFieldAttribute : Attribute
     }
 
     /// <summary>
-    /// Constructor for integeral backed bit-fields
+    /// Constructor for integral backed bit-fields
     /// </summary>
     public BitFieldAttribute(string name, byte size)
     {
