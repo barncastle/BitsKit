@@ -9,13 +9,23 @@ internal sealed class BooleanFieldModel : BitFieldModel
 {
     public BooleanFieldModel(AttributeData attributeData) : base(attributeData)
     {
-        if (attributeData.ConstructorArguments.Length != 1)
-            return;
+        switch (attributeData.ConstructorArguments.Length)
+        {
+            case 1: // boolean constructor
+                Name = (string)attributeData.ConstructorArguments[0].Value!;
+                break;
+            case 0: // padding constructor
+                break;
+            default:
+                return;
+        }
 
-        Name = (string)attributeData.ConstructorArguments[0].Value!;
         BitCount = 1;
         FieldType = BitFieldType.Boolean;
         ReturnType = typeof(bool).FullName;
+
+        if (string.IsNullOrEmpty(Name))
+            FieldType = BitFieldType.Padding;
     }
 
     protected override string GetGetterTemplate()

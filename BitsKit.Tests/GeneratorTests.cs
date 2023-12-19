@@ -154,23 +154,32 @@ public class GeneratorTests
     [TestMethod]
     public void PaddingFieldTest()
     {
-        const int Expected = 0b110011;
+        const uint ExpectedA = 0b110010110011;
+        const uint ExpectedB = 0b001101001100;
 
         // set the fields to test the setters
-        SequentialBitFieldStruct obj = new()
+        PaddingFieldStruct obj = new()
         {
-            Padding01 = 0b11, // 2 bit
+            Generated00 = 0b11,
             //          0b00, // 2 padding bits
-            Padding02 = 0b11, // 2 bit
+            Generated01 = 0b11,
+            //          0b1,  // 1 padding bit
+            Generated02 = true,
+            //          0b00, // 2 padding bits
+            Generated03 = TestEnum.A | TestEnum.B,
         };
 
-        Assert.AreEqual(obj.BackingFieldPadding, Expected);
+        Assert.AreEqual(obj.BackingField00, ExpectedA);
 
-        // set the backing field to test getters
-        obj.BackingFieldPadding = 0b011101;
+        // fill the backing field to test setters
+        obj.BackingField00 = 0b111111111111;
 
-        Assert.AreEqual(obj.Padding01, 1);
-        Assert.AreEqual(obj.Padding02, 1);
+        obj.Generated00 = 0b00;
+        obj.Generated01 = 0b00;
+        obj.Generated02 = false;
+        obj.Generated03 = 0;
+
+        Assert.AreEqual(obj.BackingField00, ExpectedB);
     }
 
     [TestMethod]

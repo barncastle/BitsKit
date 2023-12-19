@@ -131,6 +131,20 @@ public partial struct EnumBitFieldStruct
     public nuint BackingFieldUIntPtr;
 }
 
+[BitObject(BitOrder.LeastSignificant)]
+[StructLayout(LayoutKind.Sequential)]
+public partial struct PaddingFieldStruct
+{
+    [BitField("Generated00", 2)]
+    [BitField(2)]
+    [BitField("Generated01", 2)]
+    [BooleanField]
+    [BooleanField("Generated02")]
+    [EnumField(2)]
+    [EnumField("Generated03", 2, typeof(TestEnum))]
+    public uint BackingField00;
+}
+
 [Flags]
 public enum TestEnum
 {

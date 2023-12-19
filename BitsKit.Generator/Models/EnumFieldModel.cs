@@ -11,12 +11,19 @@ internal sealed class EnumFieldModel : BitFieldModel
 
     public EnumFieldModel(AttributeData attributeData) : base(attributeData)
     {
-        if (attributeData.ConstructorArguments.Length != 3)
-            return;
-
-        Name = (string)attributeData.ConstructorArguments[0].Value!;
-        BitCount = (byte)attributeData.ConstructorArguments[1].Value!;
-        EnumType = attributeData.ConstructorArguments[2].Value as INamedTypeSymbol;
+        switch(attributeData.ConstructorArguments.Length)
+        {
+            case 1: // padding constructor
+                BitCount = (byte)attributeData.ConstructorArguments[0].Value!;
+                break;
+            case 3: // enum constructor
+                Name = (string)attributeData.ConstructorArguments[0].Value!;
+                BitCount = (byte)attributeData.ConstructorArguments[1].Value!;
+                EnumType = attributeData.ConstructorArguments[2].Value as INamedTypeSymbol;
+                break;
+            default:
+                return;
+        }
 
         ReturnType = EnumType?.ToDisplayString();
         FieldType = EnumType?.EnumUnderlyingType?.SpecialType.ToBitFieldType();

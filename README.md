@@ -62,7 +62,7 @@ Bit fields are declared using the `[BitFieldAttribute]` attribute which describe
 - If the backing field is `readonly` or represents a readonly type, the bit field will also be readonly.
 
 ```c#
-// Constructor for integeral backed bit-fields
+// Constructor for integral backed bit-fields
 [BitFieldAttribute(string name, byte size)]
 // Constructor for memory backed bit-fields
 [BitFieldAttribute(string name, byte size, BitFieldType fieldType)]
@@ -82,8 +82,12 @@ public BitFieldModifiers Modifiers { get; set; }
 #### Padding Fields
 Like C, an unnamed bit field generates a set of inaccessible "padding" bits. These are primarily used for alignment or to map reserved/unused bits. There is a constructor overload dedicated to these fields.
 ```c#
-// Constructor for padding bit-fields
+// Constructor for integral padding bit-fields
 [BitFieldAttribute(byte size)]
+// Constructor for boolean padding bit-fields
+[BooleanFieldAttribute]
+// Constructor for enum padding bit-fields
+[EnumFieldAttribute(byte size)]
 ```
 
 #### Boolean Bit Fields
