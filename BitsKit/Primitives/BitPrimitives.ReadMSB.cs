@@ -155,7 +155,7 @@ public static partial class BitPrimitives
         if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 8))
             ThrowArgumentOutOfRangeException();
 
-        uint value = Unsafe.ReadUnaligned<uint>(ref Unsafe.AsRef(source[bitOffset >> 3]));
+        uint value = Unsafe.ReadUnaligned<uint>(ref Unsafe.AsRef(in source[bitOffset >> 3]));
 
         return (byte)ReadValue32(value, bitOffset & 7, bitCount, BitOrder.MostSignificant);
     }
@@ -185,7 +185,7 @@ public static partial class BitPrimitives
         if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 16))
             ThrowArgumentOutOfRangeException();
 
-        uint value = Unsafe.ReadUnaligned<uint>(ref Unsafe.AsRef(source[bitOffset >> 3]));
+        uint value = Unsafe.ReadUnaligned<uint>(ref Unsafe.AsRef(in source[bitOffset >> 3]));
 
         return (ushort)ReadValue32(value, bitOffset & 7, bitCount, BitOrder.MostSignificant);
     }
@@ -215,7 +215,7 @@ public static partial class BitPrimitives
         if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 32))
             ThrowArgumentOutOfRangeException();
 
-        ulong value = Unsafe.ReadUnaligned<ulong>(ref Unsafe.AsRef(source[bitOffset >> 3]));
+        ulong value = Unsafe.ReadUnaligned<ulong>(ref Unsafe.AsRef(in source[bitOffset >> 3]));
 
         if (bitCount + (bitOffset & 7) > 32)
             return (uint)ReadValue64(value, bitOffset & 7, bitCount, BitOrder.MostSignificant);
@@ -248,7 +248,7 @@ public static partial class BitPrimitives
         if (!ValidateArgs(source.Length * 8, bitOffset, bitCount, 64))
             ThrowArgumentOutOfRangeException();
 
-        UInt128 value = Unsafe.ReadUnaligned<UInt128>(ref Unsafe.AsRef(source[bitOffset >> 3]));
+        UInt128 value = Unsafe.ReadUnaligned<UInt128>(ref Unsafe.AsRef(in source[bitOffset >> 3]));
 
         if (bitCount + (bitOffset & 7) > 64)
             return (ulong)ReadValue128(value, bitOffset & 7, bitCount, BitOrder.MostSignificant);
