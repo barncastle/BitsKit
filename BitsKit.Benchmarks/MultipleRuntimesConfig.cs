@@ -32,6 +32,14 @@ internal class MultipleRuntimesConfig : ManualConfig
                     .NetCoreApp70
                     .WithCustomDotNetCliPath(@"C:\Program Files\dotnet\dotnet.exe", "64 bit 7.0")))
                     .WithId("64 bit 7.0"));
+
+            if (flags.HasFlag(MultipleRuntimesFlags.net8_0_x64))
+                AddJob(Job.Default
+                    .WithPlatform(Platform.X64)
+                    .WithToolchain(CsProjCoreToolchain.From(NetCoreAppSettings
+                    .NetCoreApp80
+                    .WithCustomDotNetCliPath(@"C:\Program Files\dotnet\dotnet.exe", "64 bit 8.0")))
+                    .WithId("64 bit 8.0"));
         }
 
         if (File.Exists(@"C:\Program Files (x86)\dotnet\dotnet.exe"))
@@ -51,6 +59,14 @@ internal class MultipleRuntimesConfig : ManualConfig
                     .NetCoreApp70
                     .WithCustomDotNetCliPath(@"C:\Program Files (x86)\dotnet\dotnet.exe", "32 bit 7.0")))
                     .WithId("32 bit 7.0"));
+
+            if (flags.HasFlag(MultipleRuntimesFlags.net8_0_x86))
+                AddJob(Job.Default
+                    .WithPlatform(Platform.X86)
+                    .WithToolchain(CsProjCoreToolchain.From(NetCoreAppSettings
+                    .NetCoreApp80
+                    .WithCustomDotNetCliPath(@"C:\Program Files (x86)\dotnet\dotnet.exe", "32 bit 8.0")))
+                    .WithId("32 bit 8.0"));
         }
 
         AddLogger(new ConsoleLogger());
@@ -70,12 +86,15 @@ internal class MultipleRuntimesConfig : ManualConfig
         net6_0_x86 = 2,
         net7_0_x64 = 4,
         net7_0_x86 = 8,
+        net8_0_x64 = 16,
+        net8_0_x86 = 32,
 
         net6_0 = net6_0_x64 | net6_0_x86,
         net7_0 = net7_0_x64 | net7_0_x86,
+        net8_0 = net8_0_x64 | net8_0_x86,
 
-        all_x64 = net6_0_x64 | net7_0_x64,
-        all_x86 = net6_0_x86 | net7_0_x86,
+        all_x64 = net6_0_x64 | net7_0_x64 | net8_0_x64,
+        all_x86 = net6_0_x86 | net7_0_x86 | net8_0_x86,
         all = all_x86 | all_x64
     }
 }
