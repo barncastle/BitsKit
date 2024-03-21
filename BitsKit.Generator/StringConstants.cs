@@ -60,7 +60,7 @@ internal static class StringConstants
     /// {1} = Enum Type
     /// </para>
     /// </summary>
-    public const string EnumGetterTemplate = "get => ({1})BitPrimitives.Read{{0}}{{1}}({0}, {{3}}, {{4}});";
+    public const string ExplicitGetterTemplate = "get => ({1})BitPrimitives.Read{{0}}{{1}}({0}, {{3}}, {{4}});";
     /// <summary>
     /// Getter template for reading a boolean from an integral
     /// <para>
@@ -90,7 +90,7 @@ internal static class StringConstants
     /// {1} = Underlying Type
     /// </para>
     /// </summary>
-    public const string EnumSetterTemplate = "{{0}} => BitPrimitives.Write{{1}}{{2}}({0}, {{4}}, ({1})value, {{5}});";
+    public const string ExplicitSetterTemplate = "{{0}} => BitPrimitives.Write{{1}}{{2}}({0}, {{4}}, ({1})value, {{5}});";
     /// <summary>
     /// Setter template for writing a boolean to an integral
     /// <para>

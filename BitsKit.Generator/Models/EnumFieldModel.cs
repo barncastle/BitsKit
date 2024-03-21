@@ -40,11 +40,11 @@ internal sealed class EnumFieldModel : BitFieldModel
 
     protected override string GetGetterTemplate()
     {
-        return string.Format(StringConstants.EnumGetterTemplate, GetterSource(), ReturnType);
+        return string.Format(StringConstants.ExplicitGetterTemplate, GetterSource(), ReturnType);
     }
 
     protected override string GetSetterTemplate()
     {
-        return string.Format(StringConstants.EnumSetterTemplate, SetterSource(), FieldType);
+        return string.Format(StringConstants.ExplicitSetterTemplate, SetterSource(), FieldType);
     }
 }

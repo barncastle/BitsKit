@@ -8,7 +8,6 @@
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
     <IsRoslynComponent>true</IsRoslynComponent>
-    <LangVersion>latest</LangVersion>
     <Platforms>AnyCPU;x86;x64</Platforms>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>	
   </PropertyGroup>

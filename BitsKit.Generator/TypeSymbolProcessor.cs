@@ -51,7 +51,7 @@ internal sealed class TypeSymbolProcessor(INamedTypeSymbol typeSymbol, TypeDecla
                 "System.ReadOnlySpan<byte>" => BackingFieldType.Span,
                 "byte[]" => BackingFieldType.Span,
                 "byte*" => BackingFieldType.Pointer,
-                _ when IsSupportedIntegralType(field) => BackingFieldType.Integral,
+                _ when field.Type.IsSupportedIntegralType() => BackingFieldType.Integral,
                 _ => BackingFieldType.Invalid
             };
 
@@ -131,20 +131,5 @@ internal sealed class TypeSymbolProcessor(INamedTypeSymbol typeSymbol, TypeDecla
         IsStatic: false,
         IsImplicitlyDeclared: false,
         Type: { }
-    };
-
-    private static bool IsSupportedIntegralType(IFieldSymbol field) => field.Type?.SpecialType switch
-    {
-        SpecialType.System_Byte or
-        SpecialType.System_SByte or
-        SpecialType.System_Int16 or
-        SpecialType.System_UInt16 or
-        SpecialType.System_Int32 or
-        SpecialType.System_UInt32 or
-        SpecialType.System_Int64 or
-        SpecialType.System_UInt64 or
-        SpecialType.System_IntPtr or
-        SpecialType.System_UIntPtr => true,
-        _ => false,
     };
 }

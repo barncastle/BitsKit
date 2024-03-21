@@ -45,6 +45,21 @@ internal static class Extensions
         return builder;
     }
 
+    public static bool IsSupportedIntegralType(this ITypeSymbol? type) => type?.SpecialType switch
+    {
+        SpecialType.System_Byte or
+        SpecialType.System_SByte or
+        SpecialType.System_Int16 or
+        SpecialType.System_UInt16 or
+        SpecialType.System_Int32 or
+        SpecialType.System_UInt32 or
+        SpecialType.System_Int64 or
+        SpecialType.System_UInt64 or
+        SpecialType.System_IntPtr or
+        SpecialType.System_UIntPtr => true,
+        _ => false,
+    };
+
     public static BitFieldType ToBitFieldType(this SpecialType type) => type switch
     {
         SpecialType.System_SByte => BitFieldType.SByte,
