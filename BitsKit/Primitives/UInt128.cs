@@ -7,7 +7,7 @@
 /// <remark>Polyfill for pre-NET7_0</remark>
 /// </summary>
 [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-internal readonly struct UInt128
+internal readonly struct UInt128(ulong upper, ulong lower)
 {
     public static UInt128 MinValue => new(0, 0);
     public static UInt128 MaxValue => new(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
@@ -16,15 +16,10 @@ internal readonly struct UInt128
     private readonly ulong _upper;
     private readonly ulong _lower;
 #else
-    private readonly ulong _lower;
-    private readonly ulong _upper;
-#endif
+    private readonly ulong _lower = lower;
+    private readonly ulong _upper = upper;
 
-    public UInt128(ulong upper, ulong lower)
-    {
-        _lower = lower;
-        _upper = upper;
-    }
+#endif
 
     public static implicit operator UInt128(ulong value) => new(0, value);
 

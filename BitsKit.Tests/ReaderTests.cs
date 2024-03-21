@@ -8,10 +8,10 @@ namespace BitsKit.Tests;
 [TestClass]
 public class ReaderTests
 {
-    private readonly byte[] Data = new byte[]
-    {
+    private readonly byte[] Data =
+    [
         0xCD, 0x0A, 162, 245, 92, 71, 202, 103, 218, 72
-    };
+    ];
 
     [TestMethod]
     [DynamicData(nameof(GetTestOffsetAndSizeParams), DynamicDataSourceType.Method)]

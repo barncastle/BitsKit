@@ -6,33 +6,24 @@ using BitsKit.Generator.Models;
 
 namespace BitsKit.Generator;
 
-internal sealed class TypeSymbolProcessor
+internal sealed class TypeSymbolProcessor(INamedTypeSymbol typeSymbol, TypeDeclarationSyntax typeDeclaration, AttributeData attribute)
 {
-    public INamedTypeSymbol TypeSymbol => _typeSymbol;
-    public TypeDeclarationSyntax TypeDeclaration => _typeDeclaration;
+    public INamedTypeSymbol TypeSymbol => typeSymbol;
+    public TypeDeclarationSyntax TypeDeclaration => typeDeclaration;
     public IReadOnlyList<BitFieldModel> Fields => _fields;
-    public BaseNamespaceDeclarationSyntax? Namespace => _typeDeclaration.Parent as BaseNamespaceDeclarationSyntax;
+    public BaseNamespaceDeclarationSyntax? Namespace => typeDeclaration.Parent as BaseNamespaceDeclarationSyntax;
 
-    private readonly INamedTypeSymbol _typeSymbol;
-    private readonly TypeDeclarationSyntax _typeDeclaration;
-    private readonly BitOrder _defaultBitOrder;
-    private readonly List<BitFieldModel> _fields = new();
-
-    public TypeSymbolProcessor(INamedTypeSymbol typeSymbol, TypeDeclarationSyntax typeDeclaration, AttributeData attribute)
-    {
-        _typeSymbol = typeSymbol;
-        _typeDeclaration = typeDeclaration;
-        _defaultBitOrder = (BitOrder)attribute.ConstructorArguments[0].Value!;
-    }
+    private readonly BitOrder _defaultBitOrder = (BitOrder)attribute.ConstructorArguments[0].Value!;
+    private readonly List<BitFieldModel> _fields = [];
 
     public void GenerateCSharpSource(StringBuilder sb)
     {
         sb.AppendIndentedLine(1,
             StringConstants.TypeDeclarationTemplate,
-            _typeDeclaration.Modifiers,
-            _typeDeclaration.Keyword.Text,
-            (_typeDeclaration as RecordDeclarationSyntax)?.ClassOrStructKeyword.Text,
-            _typeDeclaration.Identifier.Text)
+            typeDeclaration.Modifiers,
+            typeDeclaration.Keyword.Text,
+            (typeDeclaration as RecordDeclarationSyntax)?.ClassOrStructKeyword.Text,
+            typeDeclaration.Identifier.Text)
           .AppendIndentedLine(1, "{");
 
         foreach (BitFieldModel field in _fields)
@@ -47,7 +38,7 @@ internal sealed class TypeSymbolProcessor
     {
         _fields.Clear();
 
-        foreach (IFieldSymbol field in _typeSymbol.GetMembers().OfType<IFieldSymbol>())
+        foreach (IFieldSymbol field in typeSymbol.GetMembers().OfType<IFieldSymbol>())
         {
             if (!IsValidFieldSymbol(field))
                 continue;
@@ -77,8 +68,8 @@ internal sealed class TypeSymbolProcessor
     {
         bool hasCompilationIssues = false;
 
-        if (DiagnosticValidator.IsNotPartial(context, _typeDeclaration, _typeSymbol.Name) |
-            DiagnosticValidator.IsNested(context, _typeDeclaration, _typeSymbol.Name))
+        if (DiagnosticValidator.IsNotPartial(context, typeDeclaration, typeSymbol.Name) |
+            DiagnosticValidator.IsNested(context, typeDeclaration, typeSymbol.Name))
             hasCompilationIssues = true;
 
         foreach (BitFieldModel field in _fields)

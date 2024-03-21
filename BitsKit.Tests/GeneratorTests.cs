@@ -680,7 +680,7 @@ public class GeneratorTests
                                   .Cast<MetadataReference>();
 
         CSharpCompilation compilation = CSharpCompilation.Create("compilation",
-                                        new[] { CSharpSyntaxTree.ParseText(Helpers.GeneratorTestHeader + source) },
+                                        [CSharpSyntaxTree.ParseText(Helpers.GeneratorTestHeader + source)],
                                         references,
                                         new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true));
 

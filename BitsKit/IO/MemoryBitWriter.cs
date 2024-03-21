@@ -20,7 +20,7 @@ public ref struct MemoryBitWriter
     /// <summary>
     /// Gets the length of the source buffer in bits
     /// </summary>
-    public long Length => (long)_buffer.Length << 3;
+    public readonly long Length => (long)_buffer.Length << 3;
 
     private readonly Span<byte> _buffer;
     private int _pos;
