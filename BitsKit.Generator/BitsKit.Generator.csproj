@@ -10,6 +10,7 @@
     <IsRoslynComponent>true</IsRoslynComponent>
     <Platforms>AnyCPU;x86;x64</Platforms>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>	
+    <EnforceExtendedAnalyzerRules>True</EnforceExtendedAnalyzerRules>	
   </PropertyGroup>
 
   <ItemGroup>
