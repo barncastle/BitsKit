@@ -7,14 +7,21 @@
     <Platforms>AnyCPU;x86;x64</Platforms>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <LangVersion>preview</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-  
+
+  <PropertyGroup>
+    <PackageId>BitsKit</PackageId>
+    <Product>BitsKit</Product>
+    <GenerateDocumentationFile>true></GenerateDocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup Condition="$(TargetFramework) == 'netstandard2.1'">
-	<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BitsKit.Generator\BitsKit.Generator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    <None Include="..\BitsKit.Generator\bin\$(Configuration)\netstandard2.0\BitsKit.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>

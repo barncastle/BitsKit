@@ -1,0 +1,31 @@
+<Project>
+
+  <PropertyGroup>
+    <Version>1.0.0</Version>
+    <Authors>barncastle</Authors>
+    <Description>BitsKit is a library for efficient bit-level reading and writing also adding bit field support.</Description>
+    <Copyright>Copyright © $([System.DateTime]::Now.ToString(yyyy)) barncastle</Copyright>
+    <PackageTags>bitskit;bits;bit-field;bitreader;bitwriter;bitstream;bit-packing</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/barncastle/BitsKit</PackageProjectUrl>
+    <PackageIcon></PackageIcon>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/barncastle/BitsKit</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+
+</Project>
