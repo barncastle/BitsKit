@@ -18,7 +18,6 @@ internal readonly struct UInt128(ulong upper, ulong lower)
 #else
     private readonly ulong _lower = lower;
     private readonly ulong _upper = upper;
-
 #endif
 
     public static implicit operator UInt128(ulong value) => new(0, value);
@@ -65,7 +64,7 @@ internal readonly struct UInt128(ulong upper, ulong lower)
 
         ulong upper = value._upper >> shiftAmount;
         ulong lower = value._lower >> shiftAmount | value._upper << (64 - shiftAmount);
-        
+
         return new(upper, lower);
     }
 

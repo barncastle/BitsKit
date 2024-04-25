@@ -9,15 +9,15 @@ namespace BitsKit.Tests;
 [TestClass]
 public class IO_WriterTests
 {
-    private readonly byte[] Data = new byte[]
-    {
+    private readonly byte[] Data =
+    [
         0xCD, 0x0A, 162, 245, 92, 71, 202, 103, 218, 72
-    };
+    ];
 
-    private readonly int[] BitCounts = new int[]
-    {
+    private readonly int[] BitCounts =
+    [
         7, 10, 43, 0, 13, 6
-    };
+    ];
 
     [TestMethod]
     public void LSBSequentialMatchTest()

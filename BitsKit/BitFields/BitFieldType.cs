@@ -1,7 +1,5 @@
 ﻿namespace BitsKit.BitFields;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
 /// <summary>
 /// An enumeration of the possible bit-field types
 /// </summary>

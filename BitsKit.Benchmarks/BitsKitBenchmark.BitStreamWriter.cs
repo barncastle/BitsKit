@@ -3,6 +3,8 @@ using BitsKit.IO;
 
 namespace BitsKit.Benchmarks;
 
+#pragma warning disable CA1822 // Mark members as static
+
 public partial class BitsKitBenchmark
 {
     [Benchmark]
