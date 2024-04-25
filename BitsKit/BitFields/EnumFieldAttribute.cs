@@ -1,7 +1,13 @@
 ﻿namespace BitsKit.BitFields;
 
+/// <summary>
+/// An attribute that declares an Enum typed bit-field
+/// </summary>
 public sealed class EnumFieldAttribute : BitFieldAttribute
 {
+    /// <summary>
+    /// The Enum type of this bit-field
+    /// </summary>
     public Type EnumType { get; }
 
     /// <summary>

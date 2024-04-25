@@ -37,10 +37,22 @@ public sealed class BitStreamWriter : IDisposable
     private readonly bool _leaveOpen;
     private bool _disposed;
 
+    /// <summary>
+    /// Initialises a new instance of the <see cref="BitStreamWriter"/> class using the specific stream
+    /// </summary>
+    /// <param name="source"></param>
+    /// <exception cref="NotSupportedException"></exception>
     public BitStreamWriter(Stream source) : this(source, false)
     {
     }
 
+    /// <summary>
+    /// Initialises a new instance of the <see cref="BitStreamWriter"/> class using the specific stream
+    /// and optionally leaves the stream open
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="leaveOpen"></param>
+    /// <exception cref="NotSupportedException"></exception>
     public BitStreamWriter(Stream source, bool leaveOpen)
     {
         if (!source.CanWrite)

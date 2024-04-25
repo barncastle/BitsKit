@@ -21,6 +21,11 @@ public sealed class BitReader
     private readonly byte[] _buffer;
     private int _pos;
 
+    /// <summary>
+    /// Initialises a new instance of the <see cref="BitReader"/> class from the specified byte array
+    /// </summary>
+    /// <param name="source"></param>
+    /// <exception cref="ArgumentException"></exception>
     public BitReader(byte[] source)
     {
         if(source.Length >= 0x10000000)

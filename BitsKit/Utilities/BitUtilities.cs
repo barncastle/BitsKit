@@ -1,5 +1,8 @@
 ﻿namespace BitsKit.Utilities;
 
+/// <summary>
+/// A collection of utility methods for common bit manipulation tasks
+/// </summary>
 public static partial class BitUtilities
 {
     private static readonly byte[] UInt8BitReverseTable =

@@ -25,6 +25,11 @@ public ref struct MemoryBitWriter
     private readonly Span<byte> _buffer;
     private int _pos;
 
+    /// <summary>
+    /// Initialises a new instance of the <see cref="MemoryBitWriter"/> class from the specified span of bytes
+    /// </summary>
+    /// <param name="source"></param>
+    /// <exception cref="ArgumentException"></exception>
     public MemoryBitWriter(Span<byte> source)
     {
         if (source.Length >= 0x10000000)
@@ -167,7 +172,7 @@ public ref struct MemoryBitWriter
 
     /// <summary>
     /// Creates a new <see cref="MemoryBitWriter"/> from a specified number of <see cref="byte"/>
-    /// elements starting at a specified memory address.
+    /// elements starting at a specified memory address
     /// </summary>
     /// <returns>An <see cref="MemoryBitWriter"/></returns>
     public static unsafe MemoryBitWriter FromPointer(void* source, int length)
@@ -176,7 +181,7 @@ public ref struct MemoryBitWriter
     }
 
     /// <summary>
-    /// Creates a new <see cref="MemoryBitWriter"/> object over a span of bytes.
+    /// Creates a new <see cref="MemoryBitWriter"/> object over a span of bytes
     /// </summary>
     /// <returns>An <see cref="MemoryBitWriter"/></returns>
     public static MemoryBitWriter FromBytes(Span<byte> source)
@@ -185,7 +190,7 @@ public ref struct MemoryBitWriter
     }
 
     /// <summary>
-    /// Creates a new <see cref="MemoryBitWriter"/> over a regular managed object.
+    /// Creates a new <see cref="MemoryBitWriter"/> over a regular managed object
     /// </summary>
     /// <returns>An <see cref="MemoryBitWriter"/></returns>
     public static MemoryBitWriter FromObject<T>(ref T source) where T : unmanaged

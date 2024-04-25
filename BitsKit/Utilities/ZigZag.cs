@@ -11,48 +11,60 @@
 /// </summary>
 public static class ZigZag
 {
+    /// <summary>
+    /// ZigZag encodes a signed integral value 
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte Encode(sbyte value)
     {
         return (byte)((value << 1) ^ (value >> 31));
     }
 
+    /// <inheritdoc cref="Encode(sbyte)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ushort Encode(short value)
     {
         return (ushort)((value << 1) ^ (value >> 31));
     }
 
+    /// <inheritdoc cref="Encode(sbyte)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint Encode(int value)
     {
         return (uint)((value << 1) ^ (value >> 31));
     }
 
+    /// <inheritdoc cref="Encode(sbyte)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong Encode(long value)
     {
         return (ulong)((value << 1) ^ (value >> 63));
     }
 
+    /// <summary>
+    /// Decodes a ZigZag encoded integral value
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static sbyte Decode(byte value)
     {
         return (sbyte)((value >> 1) ^ -(value & 1));
     }
 
+    /// <inheritdoc cref="Decode(byte)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static short Decode(ushort value)
     {
         return (short)((value >> 1) ^ -(value & 1));
     }
 
+    /// <inheritdoc cref="Decode(byte)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Decode(uint value)
     {
         return (int)(value >> 1) ^ -(int)(value & 1);
     }
 
+    /// <inheritdoc cref="Decode(byte)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long Decode(ulong value)
     {

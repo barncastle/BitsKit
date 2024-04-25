@@ -6,6 +6,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BitsKit.Primitives;
 
+/// <summary>
+/// Reads and writes bits within primitives with a specific bit order
+/// </summary>
 public static partial class BitPrimitives
 {
     [DoesNotReturn]

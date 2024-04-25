@@ -21,6 +21,11 @@ public ref struct MemoryBitReader
     private readonly ReadOnlySpan<byte> _buffer;
     private int _pos;
 
+    /// <summary>
+    /// Initialises a new instance of the <see cref="MemoryBitReader"/> class from the specified span of bytes
+    /// </summary>
+    /// <param name="source"></param>
+    /// <exception cref="ArgumentException"></exception>
     public MemoryBitReader(ReadOnlySpan<byte> source)
     {
         if (source.Length >= 0x10000000)
@@ -194,7 +199,7 @@ public ref struct MemoryBitReader
     }
 
     /// <summary>
-    /// Creates a new <see cref="MemoryBitReader"/> object over a span of bytes.
+    /// Creates a new <see cref="MemoryBitReader"/> object over a span of bytes
     /// </summary>
     /// <param name="source">The read-only span to read</param>
     public static MemoryBitReader FromBytes(ReadOnlySpan<byte> source)
@@ -203,7 +208,7 @@ public ref struct MemoryBitReader
     }
 
     /// <summary>
-    /// Creates a new <see cref="MemoryBitReader"/> over a regular managed object.
+    /// Creates a new <see cref="MemoryBitReader"/> over a regular managed object
     /// </summary>
     /// <param name="source">The managed object to read</param>
     /// <exception cref="ArgumentException">Thrown when <typeparamref name="T"/> contains pointers</exception>
