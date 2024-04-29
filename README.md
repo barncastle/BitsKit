@@ -1,12 +1,9 @@
 # BitsKit
-BitsKit is a lightweight C# library that provides efficient bit-level reading, writing and manipulation. It also offers a collection of tools to simplify working with bits as well as bit field support.
+[![NuGet Version](https://img.shields.io/nuget/v/BitsKit)](https://www.nuget.org/packages/BitsKit)
 
-Reading and writing is supported for both, integral and memory types, targeting the two most common bit orders, Little Endian (LE) Least Significant Bit (LSB) and Big Endian (BE) Most Significant Bit (MSB).
+BitsKit is a lightweight C# library that provides efficient bit-level reading, writing and manipulation. As well as adding bit-field support to C#, not dissimilar to [C/C++ languages](https://en.cppreference.com/w/cpp/language/bit_field).
 
-BitsKit also provides the ability to add bit fields to types, not dissimilar to those found within the C/C++ languages.
-
-### Installation
-TODO
+All features support integral and memory types, as well as targeting both, Little Endian (LE) Least Significant Bit (LSB) and Big Endian (BE) Most Significant Bit (MSB).
 
 ## Features
 - [BitPrimitives](#bitprimitives)
@@ -17,7 +14,7 @@ TODO
 ## Usage
 
 ### BitPrimitives
-BitPrimitives is the workhorse of the library containing all of the read and write logic. This class is the bit equivalent of `System.Buffers.Binary.BinaryPrimitives` and contains a MSB and LSB read and write method for each of the below integral types:
+`BitsKit.Primitives.BitPrimitives` is the workhorse of the library containing all of the read and write logic. This class is the bit equivalent of `System.Buffers.Binary.BinaryPrimitives` and contains a MSB and LSB read and write method for each of the below integral types:
 ```
 sbyte, byte, short, ushort, int, uint, long, ulong, nint, nuint
 ```
@@ -30,10 +27,10 @@ static uint ReadUInt32MSB(uint source, int bitOffset, int bitCount);
 // reads a range of bits from a span as MSB
 static uint ReadUInt32MSB(ReadOnlySpan<byte> source, int bitOffset, int bitCount);
 
-// writes a range of bits from to a uint as MSB
+// writes a range of bits to a uint as MSB
 static void WriteUInt32MSB(ref uint destination, int bitOffset, uint value, int bitCount);
 
-// writes a range of bits from to a span as MSB
+// writes a range of bits to a span as MSB
 static void WriteUInt32MSB(Span<byte> destination, int bitOffset, uint value, int bitCount);
 ```
 This class also provides a `ReverseBitOrder` method for each integral type which inverts the bit order of each byte within the value, but not the order (endianness) of the bytes themselves e.g.
@@ -46,20 +43,20 @@ static uint ReverseBitOrder(uint value);
 ```
 
 ### Bit Fields
-BitsKit provides the ability to generate bit fields within types and aims to be as feature complete as the C and C++ implementations. This is achieved through the use of attributes applied to backing fields, which describe the structure and layout. These are converted into properties via a source generator. 
+BitsKit provides the ability to generate bit-fields within types and aims to be as feature complete as the C and C++ implementations. This is achieved through the use of attributes applied to backing fields, which describe the structure and layout. These are converted into properties via a source generator. 
 
-Bit fields can be added to class, struct and record types, supporting all of their variants too e.g., `readonly struct`, `record struct` etc. Objects containing bit fields are declared by the `[BitObjectAttribute(BitOrder)]` attribute which also declares the default bit order for the type. Types must be partial and not nested.
+Bit fields can be added to class, struct and record types, supporting all of their variants too e.g., `readonly struct`, `record struct` etc. Objects containing bit-fields are declared by the `[BitObjectAttribute(BitOrder)]` attribute which also declares the default bit order for the type. Types must be partial and not nested.
 
 Due to the nature of source generators, the user must generate the backing fields. Whilst this is more verbose than in C, it does provide much more granularity and control opening up some interesting dynamics. Backing fields must be a `field` and either; one of integral types above or one of the memory types below.
 
 `byte[], fixed byte[], byte*, Span<byte>, ReadOnlySpan<byte>, Memory<byte>, ReadOnlyMemory<byte>`
 
-Bit fields are declared using the `[BitFieldAttribute]` attribute which describes their name, size, bit order and properties. Each attribute defines a new bit field sequential from the previous. A backing field can have as many bit fields as desired, limited only by field boundaries. 
+Bit fields are declared using the `[BitFieldAttribute]` attribute which describes their name, size, bit order and properties. Each attribute defines a new bit-field sequential from the previous. A backing field can have as many bit-fields as desired, limited only by field boundaries. 
 
 **Notes:** 
-- If the backing field is an integral type, the bit field will be of the same type.
+- If the backing field is an integral type, the bit-field will be of the same type.
 - If the backing field is a memory type, the `FieldType` is required as it cannot be inferred.
-- If the backing field is `readonly` or represents a readonly type, the bit field will also be readonly.
+- If the backing field is `readonly` or represents a readonly type, the bit-field will also be readonly.
 
 ```c#
 // Constructor for integral backed bit-fields
@@ -80,7 +77,7 @@ public bool ReverseBitOrder { get; set; }
 public BitFieldModifiers Modifiers { get; set; }
 ```
 #### Padding Fields
-Like C, an unnamed bit field generates a set of inaccessible "padding" bits. These are primarily used for alignment or to map reserved/unused bits. There is a constructor overload dedicated to these fields.
+Like C, an unnamed bit-field generates a set of inaccessible "padding" bits. These are primarily used for alignment or to map reserved/unused bits. There is a constructor overload dedicated to these fields.
 ```c#
 // Constructor for integral padding bit-fields
 [BitFieldAttribute(byte size)]
@@ -91,23 +88,23 @@ Like C, an unnamed bit field generates a set of inaccessible "padding" bits. The
 ```
 
 #### Boolean Bit Fields
-Boolean bit fields are supported by the `[BooleanFieldAttribute]` helper attribute. Boolean fields consume a single bit and return if it is set or not. This attribute can be applied to any valid backing field and inherits from the `[BitFieldAttribute]` attribute. Boolean fields can be mixed with integer and enum fields without incurring a new unit.
+Boolean bit-fields are supported by the `[BooleanFieldAttribute]` helper attribute. Boolean fields consume a single bit and return if it is set or not. This attribute can be applied to any valid backing field and inherits from the `[BitFieldAttribute]` attribute. Boolean fields can be mixed with integer and enum fields without incurring a new unit.
 ```c#
 // Constructor for boolean bit-fields
 [BooleanFieldAttribute(string name)]
 ```
 
 #### Enum Bit Fields
-Enum bit fields are supported by the `[EnumFieldAttribute]` helper attribute. This attribute can be applied to any valid backing field and inherits from the `[BitFieldAttribute]` attribute. The enum type must be passed as a type argument i.e., `typeof(MyEnum)`. Enum fields can be mixed with integer and boolean fields without incurring a new unit.
+Enum bit-fields are supported by the `[EnumFieldAttribute]` helper attribute. This attribute can be applied to any valid backing field and inherits from the `[BitFieldAttribute]` attribute. The enum type must be passed as a type argument i.e., `typeof(MyEnum)`. Enum fields can be mixed with integer and boolean fields without incurring a new unit.
 ```c#
 // Constructor for enum bit-fields
 [EnumFieldAttribute(string name, byte size, Type enumType)]
 ```
 
 #### Modifiers
-The `BitFieldModifiers` enum allows alterations to the way that the source generator produces the bit fields. By default all bit fields are generated as a *public read/write* or *public readonly* properties relative to their backing field's accessibility. The `Modifiers` field allows control over this and provides the ability to change a bit field's accessibility and if it is `readonly`, `init only` (.NET 6.0) and/or `required` (.NET 7.0).
+The `BitFieldModifiers` enum allows alterations to the way that the source generator produces the bit-fields. By default all bit-fields are generated as a *public read/write* or *public readonly* properties relative to their backing field's accessibility. The `Modifiers` field allows control over this and provides the ability to change a bit-field's accessibility and if it is `readonly`, `init only` (.NET 6.0) and/or `required` (.NET 7.0).
 
-**Note:** Currently both the getter and setter share the same accessibility therefore you cannot have public bit fields with private setters.
+**Note:** Currently both the getter and setter share the same accessibility therefore you cannot have public bit-fields with private setters.
 
 #### Examples
 Putting this into action with the following C struct:
@@ -174,7 +171,7 @@ BITSKIT005 | Warning | Conflicting setter modifiers
 BITSKIT006 | Error | Enum type argument expected
 
 ### IO Classes
-There are a number of IO types available under the `BitsKit.IO` namespace built to sequentially read/write regions of bit data. Each of these classes expose all the `BitPrimtives` methods whilst supporting seeking and writing in-place.
+There are a number of IO types available under the `BitsKit.IO` namespace built to sequentially read/write regions of bit data. Each of these classes expose all the `BitPrimitives` methods whilst supporting seeking and writing in-place.
 
 `BitReader/BitWriter` - Classes for reading/writing to a byte array.
 `MemoryBitReader/MemoryBitWriter` - Ref structs for reading/writing to a `Span<byte>`.
