@@ -5,7 +5,7 @@
     <Authors>barncastle</Authors>
     <Description>BitsKit is a library for efficient bit-level reading and writing also adding bit field support.</Description>
     <Copyright>Copyright © $([System.DateTime]::Now.ToString(yyyy)) barncastle</Copyright>
-    <PackageTags>bitskit;bits;bit-field;bitreader;bitwriter;bitstream;bit-packing</PackageTags>
+    <PackageTags>bitskit;bits;bitfield;bit-field;bitreader;bitwriter;bitstream;bitpack;bit-pack</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/barncastle/BitsKit</PackageProjectUrl>
