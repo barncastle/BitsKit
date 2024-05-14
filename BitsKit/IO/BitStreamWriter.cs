@@ -12,22 +12,16 @@ namespace BitsKit.IO;
 /// </para> 
 /// </remarks>
 /// </summary>
-public sealed class BitStreamWriter : IDisposable
+public sealed class BitStreamWriter : IBitWriter, IBitStream
 {
-    /// <summary>
-    /// Gets or sets the bit position of the current stream
-    /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
-    /// <exception cref="NotSupportedException"></exception>
+    /// <inheritdoc cref="IBitStream.Position"/>
     public long Position
     {
         get => (_stream.Position << 3) + _bitsPos;
         set => SetPosition(value);
     }
 
-    /// <summary>
-    /// Gets the length of the stream in bits
-    /// </summary>
+    /// <inheritdoc cref="IBitStream.Length"/>
     public long Length => _stream.Length << 3;
 
     private Stream _stream;
@@ -52,23 +46,23 @@ public sealed class BitStreamWriter : IDisposable
     /// </summary>
     /// <param name="source"></param>
     /// <param name="leaveOpen"></param>
-    /// <exception cref="NotSupportedException"></exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> is null.</exception>
+    /// <exception cref="NotSupportedException">Thrown when <paramref name="source"/> does not support writing.</exception>
     public BitStreamWriter(Stream source, bool leaveOpen)
     {
+        if (source is null)
+            IBitStream.ThrowSourceNullException();
+
         if (!source.CanWrite)
             throw new NotSupportedException("Stream does not support writing.");
 
         _stream = source;
         _leaveOpen = leaveOpen;
-
+        
         ResetBuffer();
     }
 
-    /// <summary>
-    /// Sets the bit position within the current stream
-    /// </summary>
-    /// <exception cref="NotSupportedException"></exception>
-    /// <exception cref="InvalidEnumArgumentException"></exception>
+    /// <inheritdoc cref="IBitStream.Seek"/>
     public long Seek(long offset, SeekOrigin origin)
     {
         return Position = origin switch
@@ -76,7 +70,7 @@ public sealed class BitStreamWriter : IDisposable
             SeekOrigin.Begin => offset,
             SeekOrigin.Current => Position + offset,
             SeekOrigin.End => Length - offset,
-            _ => throw new InvalidEnumArgumentException(nameof(origin))
+            _ => throw new ArgumentOutOfRangeException(nameof(origin))
         };
     }
 
@@ -117,7 +111,7 @@ public sealed class BitStreamWriter : IDisposable
 
     #region Methods
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteBitLSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteBitLSB"/>
     public void WriteBitLSB(bool value)
     {
         Span<byte> buffer = stackalloc byte[1];
@@ -127,7 +121,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, 1);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteBitMSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteBitMSB"/>
     public void WriteBitMSB(bool value)
     {
         Span<byte> buffer = stackalloc byte[1];
@@ -137,7 +131,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, 1);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteInt8LSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteInt8LSB"/>
     public void WriteInt8LSB(sbyte value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[2];
@@ -147,7 +141,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteInt8MSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteInt8MSB"/>
     public void WriteInt8MSB(sbyte value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[2];
@@ -157,7 +151,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteInt16LSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteInt16LSB"/>
     public void WriteInt16LSB(short value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[3];
@@ -167,7 +161,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteInt16MSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteInt16MSB"/>
     public void WriteInt16MSB(short value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[3];
@@ -177,7 +171,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteInt32LSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteInt32LSB"/>
     public void WriteInt32LSB(int value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[5];
@@ -187,7 +181,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteInt32MSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteInt32MSB"/>
     public void WriteInt32MSB(int value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[5];
@@ -197,7 +191,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteInt64LSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteInt64LSB"/>
     public void WriteInt64LSB(long value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[9];
@@ -207,7 +201,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteInt64MSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteInt64MSB"/>
     public void WriteInt64MSB(long value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[9];
@@ -217,7 +211,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteUInt8LSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteUInt8LSB"/>
     public void WriteUInt8LSB(byte value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[2];
@@ -227,7 +221,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteUInt8MSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteUInt8MSB"/>
     public void WriteUInt8MSB(byte value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[2];
@@ -237,7 +231,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteUInt16LSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteUInt16LSB"/>
     public void WriteUInt16LSB(ushort value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[3];
@@ -247,7 +241,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteUInt16MSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteUInt16MSB"/>
     public void WriteUInt16MSB(ushort value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[3];
@@ -257,7 +251,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteUInt32LSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteUInt32LSB"/>
     public void WriteUInt32LSB(uint value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[5];
@@ -267,7 +261,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteUInt32MSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteUInt32MSB"/>
     public void WriteUInt32MSB(uint value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[5];
@@ -277,7 +271,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteUInt64LSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteUInt64LSB"/>
     public void WriteUInt64LSB(ulong value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[9];
@@ -287,7 +281,7 @@ public sealed class BitStreamWriter : IDisposable
         InternalWrite(buffer, bitCount);
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.WriteUInt64MSB"/>
+    /// <inheritdoc cref="IBitWriter.WriteUInt64MSB"/>
     public void WriteUInt64MSB(ulong value, int bitCount)
     {
         Span<byte> buffer = stackalloc byte[9];
@@ -322,7 +316,7 @@ public sealed class BitStreamWriter : IDisposable
             _stream.Position -= read;
         }
 
-        // prepend any buffered bits
+        // preserve any unwritten bits
         if (_bitsPos != 0)
             buffer[0] = _buffer;
     }
@@ -338,7 +332,7 @@ public sealed class BitStreamWriter : IDisposable
 
         _bitsPos = (_bitsPos + bitCount) & 7;
 
-        // buffer any unprocessed bits
+        // preserve any unwritten bits
         if (_bitsPos != 0)
             _buffer = buffer[writeLen];
     }
@@ -346,7 +340,7 @@ public sealed class BitStreamWriter : IDisposable
     private void SetPosition(long position)
     {
         if (position < 0)
-            throw new ArgumentOutOfRangeException(nameof(position));
+            IBitStream.ThrowNegativePositionException();
 
         // calculate offsets
         int bytePos = (int)(position >> 3);
