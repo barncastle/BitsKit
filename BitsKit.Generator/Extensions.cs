@@ -79,15 +79,15 @@ internal static class Extensions
     {
         BitFieldType.SByte => "Int8",
         BitFieldType.Byte => "UInt8",
-        BitFieldType.Int16 or
-        BitFieldType.UInt16 or
-        BitFieldType.Int32 or
-        BitFieldType.UInt32 or
-        BitFieldType.Int64 or
-        BitFieldType.UInt64 or
-        BitFieldType.IntPtr or
-        BitFieldType.UIntPtr or
-        BitFieldType.Boolean => type.ToString(),
+        BitFieldType.Int16 => "Int16",
+        BitFieldType.UInt16 => "UInt16",
+        BitFieldType.Int32 => "Int32",
+        BitFieldType.UInt32 => "UInt32",
+        BitFieldType.Int64 => "Int64",
+        BitFieldType.UInt64 => "UInt64",
+        BitFieldType.IntPtr => "IntPtr",
+        BitFieldType.UIntPtr => "UIntPtr",
+        BitFieldType.Boolean => "Boolean",
         _ => throw new NotSupportedException()
     };
 
