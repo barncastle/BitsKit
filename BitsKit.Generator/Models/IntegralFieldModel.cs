@@ -7,7 +7,7 @@ namespace BitsKit.Generator.Models;
 /// </summary>
 internal sealed class IntegralFieldModel : BitFieldModel
 {
-    public IntegralFieldModel(AttributeData attributeData) : base(attributeData)
+    public IntegralFieldModel(AttributeData attributeData, TypeSymbolProcessor typeSymbol) : base(attributeData, typeSymbol)
     {
         switch (attributeData.ConstructorArguments.Length)
         {

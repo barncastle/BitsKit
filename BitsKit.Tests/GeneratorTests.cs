@@ -563,13 +563,13 @@ public class GeneratorTests
         {
             public  System.Boolean Generated01 
             {
-                get => BitPrimitives.ReadInt32LSB(BackingField00, 0, 1) == 1;
+                readonly get => BitPrimitives.ReadInt32LSB(BackingField00, 0, 1) == 1;
                 set => BitPrimitives.WriteInt32LSB(ref BackingField00, 0, (Int32)(value ? 1 : 0), 1);
             }
 
             public  System.Boolean Generated10 
             {
-                get => BitPrimitives.ReadBitLSB(BackingField01, 0);
+                readonly get => BitPrimitives.ReadBitLSB(BackingField01, 0);
                 set => BitPrimitives.WriteBitLSB(BackingField01, 0, value);
             }
 
@@ -621,25 +621,25 @@ public class GeneratorTests
         {
             public  BitsKit.Tests.TestEnum Generated00 
             {
-                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField00, 0, 2);
+                readonly get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField00, 0, 2);
                 set => BitPrimitives.WriteInt32LSB(ref BackingField00, 0, (Int32)value, 2);
             }
 
             public  BitsKit.Tests.TestEnum Generated01 
             {
-                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField00, 2, 2);
+                readonly get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField00, 2, 2);
                 set => BitPrimitives.WriteInt32LSB(ref BackingField00, 2, (Int32)value, 2);
             }
 
             public  BitsKit.Tests.TestEnum Generated10 
             {
-                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField01, 0, 2);
+                readonly get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField01, 0, 2);
                 set => BitPrimitives.WriteInt32LSB(BackingField01, 0, (Int32)value, 2);
             }
 
             public  BitsKit.Tests.TestEnum Generated11 
             {
-                get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField01, 2, 2);
+                readonly get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(BackingField01, 2, 2);
                 set => BitPrimitives.WriteInt32LSB(BackingField01, 2, (Int32)value, 2);
             }
 

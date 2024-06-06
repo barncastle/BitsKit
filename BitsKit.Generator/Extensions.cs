@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BitsKit.Generator;
 
@@ -43,6 +45,14 @@ internal static class Extensions
         builder.Length = i;
 
         return builder;
+    }
+
+    /// <summary>
+    /// Returns if a TypeDeclaration is a struct or not
+    /// </summary>
+    public static bool IsStruct(this TypeDeclarationSyntax typeDeclaration)
+    {
+        return (SyntaxKind)typeDeclaration.RawKind is SyntaxKind.StructDeclaration or SyntaxKind.RecordStructDeclaration;
     }
 
     public static bool IsSupportedIntegralType(this ITypeSymbol? type) => type?.SpecialType switch

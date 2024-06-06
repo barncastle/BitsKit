@@ -52,7 +52,7 @@ internal static class StringConstants
     /// {0} = Source
     /// </para>
     /// </summary>
-    public const string IntegralGetterTemplate = "get => BitPrimitives.Read{{0}}{{1}}({0}, {{3}}, {{4}});";
+    public const string IntegralGetterTemplate = "{{0}} {{1}} => BitPrimitives.Read{{2}}{{3}}({0}, {{5}}, {{6}});";
     /// <summary>
     /// Getter template for reading enum field bits
     /// <para>
@@ -60,21 +60,21 @@ internal static class StringConstants
     /// {1} = Enum Type
     /// </para>
     /// </summary>
-    public const string ExplicitGetterTemplate = "get => ({1})BitPrimitives.Read{{0}}{{1}}({0}, {{3}}, {{4}});";
+    public const string ExplicitGetterTemplate = "{{0}} {{1}} => ({1})BitPrimitives.Read{{2}}{{3}}({0}, {{5}}, {{6}});";
     /// <summary>
     /// Getter template for reading a boolean from an integral
     /// <para>
     /// {0} = Source
     /// </para>
     /// </summary>
-    public const string BooleanGetterTemplate = "get => BitPrimitives.Read{{0}}{{1}}({0}, {{3}}, 1) == 1;";
+    public const string BooleanGetterTemplate = "{{0}} {{1}} => BitPrimitives.Read{{2}}{{3}}({0}, {{5}}, 1) == 1;";
     /// <summary>
     /// Getter template for reading a boolean from a span
     /// <para>
     /// {0} = Source
     /// </para>
     /// </summary>
-    public const string BooleanSpanGetterTemplate = "get => BitPrimitives.ReadBit{{1}}({0}, {{3}});";
+    public const string BooleanSpanGetterTemplate = "{{0}} {{1}} => BitPrimitives.ReadBit{{3}}({0}, {{5}});";
 
     /// <summary>
     /// Setter template for writing integral bits
@@ -82,7 +82,7 @@ internal static class StringConstants
     /// {0} = Source
     /// </para>
     /// </summary>
-    public const string IntegralSetterTemplate = "{{0}} => BitPrimitives.Write{{1}}{{2}}({0}, {{4}}, value, {{5}});";
+    public const string IntegralSetterTemplate = "{{0}} {{1}} => BitPrimitives.Write{{2}}{{3}}({0}, {{5}}, value, {{6}});";
     /// <summary>
     /// Setter template for writing enum field bits
     /// <para>
@@ -90,7 +90,7 @@ internal static class StringConstants
     /// {1} = Underlying Type
     /// </para>
     /// </summary>
-    public const string ExplicitSetterTemplate = "{{0}} => BitPrimitives.Write{{1}}{{2}}({0}, {{4}}, ({1})value, {{5}});";
+    public const string ExplicitSetterTemplate = "{{0}} {{1}} => BitPrimitives.Write{{2}}{{3}}({0}, {{5}}, ({1})value, {{6}});";
     /// <summary>
     /// Setter template for writing a boolean to an integral
     /// <para>
@@ -98,12 +98,12 @@ internal static class StringConstants
     /// {1} = FieldType
     /// </para>
     /// </summary>
-    public const string BooleanSetterTemplate = "{{0}} => BitPrimitives.Write{{1}}{{2}}({0}, {{4}}, ({1})(value ? 1 : 0), 1);";
+    public const string BooleanSetterTemplate = "{{0}} {{1}} => BitPrimitives.Write{{2}}{{3}}({0}, {{5}}, ({1})(value ? 1 : 0), 1);";
     /// <summary>
     /// Setter template for writing a boolean to a span
     /// <para>
     /// {0} = Source
     /// </para>
     /// </summary>
-    public const string BooleanSpanSetterTemplate = "{{0}} => BitPrimitives.WriteBit{{2}}({0}, {{4}}, value);";
+    public const string BooleanSpanSetterTemplate = "{{0}} {{1}} => BitPrimitives.WriteBit{{3}}({0}, {{5}}, value);";
 }

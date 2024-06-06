@@ -16,9 +16,12 @@ internal abstract class BitFieldModel
     public BitOrder BitOrder { get; set; }
     public bool ReverseBitOrder { get; }
     public BitFieldModifiers Modifiers { get; }
+    public TypeSymbolProcessor TypeSymbol { get; }
 
-    public BitFieldModel(AttributeData attributeData)
+    public BitFieldModel(AttributeData attributeData, TypeSymbolProcessor typeSymbol)
     {
+        TypeSymbol = typeSymbol;
+
         for (int i = 0; i < attributeData.NamedArguments.Length; i++)
         {
             switch (attributeData.NamedArguments[i].Key)
@@ -59,6 +62,8 @@ internal abstract class BitFieldModel
         {
             sb.AppendIndentedLine(3,
                 GetGetterTemplate(),
+                SupportsReadOnlyGetter() ? "readonly" : "",
+                "get",
                 FieldType!.Value.ToIntegralName(),
                 BitOrder.ToShortName(),
                 BackingField.Name,
@@ -72,6 +77,7 @@ internal abstract class BitFieldModel
         {
             sb.AppendIndentedLine(3,
                 GetSetterTemplate(),
+                "",
                 Modifiers.HasFlag(BitFieldModifiers.InitOnly) ? "init" : "set",
                 FieldType!.Value.ToIntegralName(),
                 BitOrder.ToShortName(),
@@ -119,12 +125,14 @@ internal abstract class BitFieldModel
     /// <summary>
     /// Generates a template for the property getter
     /// <para>
-    /// {0} = BitPrimitives method<br/>
-    /// {1} = <see cref="BitOrder"/><br/>
-    /// {2} = <see cref="BackingField"/><br/>
-    /// {3} = <see cref="BitOffset"/><br/> 
-    /// {4} = <see cref="BitCount"/><br/>
-    /// {5} = <see cref="BackingField"/>.FixedSize
+    /// {0} = Getter prefix<br/>
+    /// {1} = Getter type<br/>
+    /// {2} = BitPrimitives method<br/>
+    /// {3} = <see cref="BitOrder"/><br/>
+    /// {4} = <see cref="BackingField"/><br/>
+    /// {5} = <see cref="BitOffset"/><br/> 
+    /// {6} = <see cref="BitCount"/><br/>
+    /// {7} = <see cref="BackingField"/>.FixedSize
     /// </para> 
     /// </summary>
     protected abstract string GetGetterTemplate();
@@ -132,16 +140,41 @@ internal abstract class BitFieldModel
     /// <summary>
     /// Generates a template for the property setter
     /// <para>
-    /// {0} = Setter type<br/>
-    /// {1} = BitPrimitive method<br/>
-    /// {2} = <see cref="BitOrder"/><br/>
-    /// {3} = <see cref="BackingField"/><br/>
-    /// {4} = <see cref="BitOffset"/><br/> 
-    /// {5} = <see cref="BitCount"/><br/>
-    /// {6} = <see cref="BackingField"/>.FixedSize
+    /// {0} = Setter prefix<br/>
+    /// {1} = Setter type<br/>
+    /// {2} = BitPrimitive method<br/>
+    /// {3} = <see cref="BitOrder"/><br/>
+    /// {4} = <see cref="BackingField"/><br/>
+    /// {5} = <see cref="BitOffset"/><br/> 
+    /// {6} = <see cref="BitCount"/><br/>
+    /// {7} = <see cref="BackingField"/>.FixedSize
     /// </para> 
     /// </summary>
     protected abstract string GetSetterTemplate();
+
+    /// <summary>
+    /// Gets the getter's source template based on it's BackingField
+    /// </summary>
+    protected string GetterSource() => BackingFieldType switch
+    {
+        BackingFieldType.Integral => "{4}",
+        BackingFieldType.Memory => "{4}.Span",
+        BackingFieldType.Span => "{4}",
+        BackingFieldType.Pointer => "MemoryMarshal.CreateReadOnlySpan(ref {4}[0], {7})",
+        _ => throw new NotSupportedException()
+    };
+
+    /// <summary>
+    /// Gets the setter's source template based on it's BackingField
+    /// </summary>
+    protected string SetterSource() => BackingFieldType switch
+    {
+        BackingFieldType.Integral => "ref {4}",
+        BackingFieldType.Memory => "{4}.Span",
+        BackingFieldType.Span => "{4}",
+        BackingFieldType.Pointer => "MemoryMarshal.CreateSpan(ref {4}[0], {7})",
+        _ => throw new NotSupportedException()
+    };
 
     /// <summary>
     /// Determines if this field is ReadOnly based on it's BackingField and Modifiers
@@ -157,26 +190,13 @@ internal abstract class BitFieldModel
     }
 
     /// <summary>
-    /// Gets the getter's source template based on it's BackingField
+    /// Determines if this property can have a readonly instance member
     /// </summary>
-    protected string GetterSource() => BackingFieldType switch
+    /// <returns></returns>
+    private bool SupportsReadOnlyGetter()
     {
-        BackingFieldType.Integral => "{2}",
-        BackingFieldType.Memory => "{2}.Span",
-        BackingFieldType.Span => "{2}",
-        BackingFieldType.Pointer => "MemoryMarshal.CreateReadOnlySpan(ref {2}[0], {5})",
-        _ => throw new NotSupportedException()
-    };
-
-    /// <summary>
-    /// Gets the setter's source template based on it's BackingField
-    /// </summary>
-    protected string SetterSource() => BackingFieldType switch
-    {
-        BackingFieldType.Integral => "ref {3}",
-        BackingFieldType.Memory => "{3}.Span",
-        BackingFieldType.Span => "{3}",
-        BackingFieldType.Pointer => "MemoryMarshal.CreateSpan(ref {3}[0], {6})",
-        _ => throw new NotSupportedException()
-    };
+        return TypeSymbol.TypeDeclaration.IsStruct() &&
+               BackingFieldType != BackingFieldType.Pointer &&
+               !IsReadOnly();
+    }
 }

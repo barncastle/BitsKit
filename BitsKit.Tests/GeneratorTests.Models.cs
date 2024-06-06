@@ -145,6 +145,21 @@ public partial struct PaddingFieldStruct
     public uint BackingField00;
 }
 
+[BitObject(BitOrder.LeastSignificant)]
+[StructLayout(LayoutKind.Explicit)]
+public readonly partial struct ReadOnlyStruct
+{
+    [BitField("Generated01", 2)]
+    [BitField("Generated02", 2)]
+    [FieldOffset(0)]
+    public readonly int BackingField00;
+
+    [BitField("Generated03", 2)]
+    [BitField("Generated04", 2)]
+    [FieldOffset(0)]
+    public readonly ulong BackingField01;
+}
+
 [Flags]
 public enum TestEnum
 {

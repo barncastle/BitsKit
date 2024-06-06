@@ -9,7 +9,7 @@ internal sealed class EnumFieldModel : BitFieldModel
 {
     public INamedTypeSymbol? EnumType { get; }
 
-    public EnumFieldModel(AttributeData attributeData) : base(attributeData)
+    public EnumFieldModel(AttributeData attributeData, TypeSymbolProcessor typeSymbol) : base(attributeData, typeSymbol)
     {
         switch(attributeData.ConstructorArguments.Length)
         {

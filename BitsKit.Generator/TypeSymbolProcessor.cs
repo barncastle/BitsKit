@@ -91,9 +91,9 @@ internal sealed class TypeSymbolProcessor(INamedTypeSymbol typeSymbol, TypeDecla
 
             BitFieldModel? bitField = attributeType switch
             {
-                StringConstants.BitFieldAttributeFullName => new IntegralFieldModel(attribute),
-                StringConstants.BooleanFieldAttributeFullName => new BooleanFieldModel(attribute),
-                StringConstants.EnumFieldAttributeFullName => new EnumFieldModel(attribute),
+                StringConstants.BitFieldAttributeFullName => new IntegralFieldModel(attribute, this),
+                StringConstants.BooleanFieldAttributeFullName => new BooleanFieldModel(attribute, this),
+                StringConstants.EnumFieldAttributeFullName => new EnumFieldModel(attribute, this),
                 _ => null
             };
 
