@@ -54,7 +54,7 @@ Due to the nature of source generators, the user must generate the backing field
 Bit fields are declared using the `[BitFieldAttribute]` attribute which describes their name, size, bit order and properties. Each attribute defines a new bit-field sequential from the previous. A backing field can have as many bit-fields as desired, limited only by field boundaries. 
 
 **Notes:** 
-- If the backing field is an integral type, the bit-field will be of the same type.
+- If the backing field is an integral type, the bit-field will be of the same type. Type Casting is supported via `FieldType`.
 - If the backing field is a memory type, the `FieldType` is required as it cannot be inferred.
 - If the backing field is `readonly` or represents a readonly type, the bit-field will also be readonly.
 

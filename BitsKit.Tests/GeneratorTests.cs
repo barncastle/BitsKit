@@ -672,6 +672,43 @@ public class GeneratorTests
         Assert.IsTrue(Helpers.StrEqualExWhiteSpace(sourceOutput, expected));
     }
 
+    [TestMethod]
+    public void IntegerConversionTest()
+    {
+        string source = @"
+        [BitObject(BitOrder.LeastSignificant)]
+        public ref partial struct BitFieldIntegerConversion
+        {
+            [BitField(""Generated00"", 2, BitFieldType.Byte)]
+            public int BackingField00;
+
+            [BitField(""Generated10"", 2, BitFieldType.Int32)]
+            public Span<byte> BackingField01;
+        }
+        ";
+
+        string expected = @"
+        public ref partial struct  BitFieldIntegerConversion
+        {
+            public  Byte Generated00 
+            {
+                readonly get => (Byte)BitPrimitives.ReadInt32LSB(BackingField00, 0, 2);
+                set => BitPrimitives.WriteInt32LSB(ref BackingField00, 0, (Int32)value, 2);
+            }
+
+            public  Int32 Generated10 
+            {
+                readonly get => BitPrimitives.ReadInt32LSB(BackingField01, 0, 2);
+                set => BitPrimitives.WriteInt32LSB(BackingField01, 0, value, 2);
+            }
+        }
+        ";
+
+        string? sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
+
+        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(sourceOutput, expected));
+    }
+
     private static string? GenerateSourceAndTest(string source, IIncrementalGenerator generator)
     {
         var references = AppDomain.CurrentDomain.GetAssemblies()

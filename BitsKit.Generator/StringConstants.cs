@@ -54,10 +54,10 @@ internal static class StringConstants
     /// </summary>
     public const string IntegralGetterTemplate = "{{0}} {{1}} => BitPrimitives.Read{{2}}{{3}}({0}, {{5}}, {{6}});";
     /// <summary>
-    /// Getter template for reading enum field bits
+    /// Getter template for reading explicitly cast field bits
     /// <para>
     /// {0} = Source<br/>
-    /// {1} = Enum Type
+    /// {1} = <see cref="Models.BitFieldModel.ReturnType"/>
     /// </para>
     /// </summary>
     public const string ExplicitGetterTemplate = "{{0}} {{1}} => ({1})BitPrimitives.Read{{2}}{{3}}({0}, {{5}}, {{6}});";
@@ -84,10 +84,10 @@ internal static class StringConstants
     /// </summary>
     public const string IntegralSetterTemplate = "{{0}} {{1}} => BitPrimitives.Write{{2}}{{3}}({0}, {{5}}, value, {{6}});";
     /// <summary>
-    /// Setter template for writing enum field bits
+    /// Setter template for writing explicitly cast field bits
     /// <para>
     /// {0} = Source<br/>
-    /// {1} = Underlying Type
+    /// {1} = <see cref="Models.BitFieldModel.FieldType"/>
     /// </para>
     /// </summary>
     public const string ExplicitSetterTemplate = "{{0}} {{1}} => BitPrimitives.Write{{2}}{{3}}({0}, {{5}}, ({1})value, {{6}});";
@@ -95,7 +95,7 @@ internal static class StringConstants
     /// Setter template for writing a boolean to an integral
     /// <para>
     /// {0} = Source<br/>
-    /// {1} = FieldType
+    /// {1} = <see cref="Models.BitFieldModel.FieldType"/>
     /// </para>
     /// </summary>
     public const string BooleanSetterTemplate = "{{0}} {{1}} => BitPrimitives.Write{{2}}{{3}}({0}, {{5}}, ({1})(value ? 1 : 0), 1);";
