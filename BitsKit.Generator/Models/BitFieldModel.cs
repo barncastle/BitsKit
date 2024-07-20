@@ -129,7 +129,7 @@ internal abstract class BitFieldModel
     /// {1} = Getter type<br/>
     /// {2} = BitPrimitives method<br/>
     /// {3} = <see cref="BitOrder"/><br/>
-    /// {4} = <see cref="BackingField"/><br/>
+    /// {4} = IntegralName<br/>
     /// {5} = <see cref="BitOffset"/><br/> 
     /// {6} = <see cref="BitCount"/><br/>
     /// {7} = <see cref="BackingField"/>.FixedSize
@@ -144,7 +144,7 @@ internal abstract class BitFieldModel
     /// {1} = Setter type<br/>
     /// {2} = BitPrimitive method<br/>
     /// {3} = <see cref="BitOrder"/><br/>
-    /// {4} = <see cref="BackingField"/><br/>
+    /// {4} = IntegralName<br/>
     /// {5} = <see cref="BitOffset"/><br/> 
     /// {6} = <see cref="BitCount"/><br/>
     /// {7} = <see cref="BackingField"/>.FixedSize
