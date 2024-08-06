@@ -166,7 +166,7 @@ internal abstract class BitFieldModel
         BackingFieldType.Memory => "{4}.Span",
         BackingFieldType.Span => "{4}",
         BackingFieldType.Pointer => "MemoryMarshal.CreateReadOnlySpan(ref {4}[0], {7})",
-        BackingFieldType.InlineArray => "MemoryMarshal.Cast<{8}, byte>(this)",
+        BackingFieldType.InlineArray => "MemoryMarshal.AsBytes<{8}>(this)",
         _ => throw new NotSupportedException()
     };
 
@@ -179,7 +179,7 @@ internal abstract class BitFieldModel
         BackingFieldType.Memory => "{4}.Span",
         BackingFieldType.Span => "{4}",
         BackingFieldType.Pointer => "MemoryMarshal.CreateSpan(ref {4}[0], {7})",
-        BackingFieldType.InlineArray => "MemoryMarshal.Cast<{8}, byte>(this)",
+        BackingFieldType.InlineArray => "MemoryMarshal.AsBytes<{8}>(this)",
         _ => throw new NotSupportedException()
     };
 
