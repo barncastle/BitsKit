@@ -3,27 +3,39 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
 using System.Text;
 using BitsKit.Generator.Models;
+using System.Linq;
 
 namespace BitsKit.Generator;
 
-internal sealed class TypeSymbolProcessor(INamedTypeSymbol typeSymbol, TypeDeclarationSyntax typeDeclaration, AttributeData attribute)
+internal sealed class TypeSymbolProcessor
 {
-    public INamedTypeSymbol TypeSymbol => typeSymbol;
-    public TypeDeclarationSyntax TypeDeclaration => typeDeclaration;
+    public INamedTypeSymbol TypeSymbol { get; }
+    public TypeDeclarationSyntax TypeDeclaration { get; }
     public IReadOnlyList<BitFieldModel> Fields => _fields;
-    public BaseNamespaceDeclarationSyntax? Namespace => typeDeclaration.Parent as BaseNamespaceDeclarationSyntax;
+    public BaseNamespaceDeclarationSyntax? Namespace { get; }
+    public bool IsInlineArray { get; }
 
-    private readonly BitOrder _defaultBitOrder = (BitOrder)attribute.ConstructorArguments[0].Value!;
+    private readonly BitOrder _defaultBitOrder;
     private readonly List<BitFieldModel> _fields = [];
+
+    public TypeSymbolProcessor(INamedTypeSymbol typeSymbol, TypeDeclarationSyntax typeDeclaration, AttributeData attribute)
+    {
+        TypeSymbol = typeSymbol;
+        TypeDeclaration = typeDeclaration;
+        Namespace = TypeDeclaration.Parent as BaseNamespaceDeclarationSyntax;
+        IsInlineArray = HasInlineArrayAttribute();
+
+        _defaultBitOrder = (BitOrder)attribute.ConstructorArguments[0].Value!;
+    }
 
     public void GenerateCSharpSource(StringBuilder sb)
     {
         sb.AppendIndentedLine(1,
             StringConstants.TypeDeclarationTemplate,
-            typeDeclaration.Modifiers,
-            typeDeclaration.Keyword.Text,
-            (typeDeclaration as RecordDeclarationSyntax)?.ClassOrStructKeyword.Text,
-            typeDeclaration.Identifier.Text)
+            TypeDeclaration.Modifiers,
+            TypeDeclaration.Keyword.Text,
+            (TypeDeclaration as RecordDeclarationSyntax)?.ClassOrStructKeyword.Text,
+            TypeDeclaration.Identifier.Text)
           .AppendIndentedLine(1, "{");
 
         foreach (BitFieldModel field in _fields)
@@ -38,7 +50,7 @@ internal sealed class TypeSymbolProcessor(INamedTypeSymbol typeSymbol, TypeDecla
     {
         _fields.Clear();
 
-        foreach (IFieldSymbol field in typeSymbol.GetMembers().OfType<IFieldSymbol>())
+        foreach (IFieldSymbol field in TypeSymbol.GetMembers().OfType<IFieldSymbol>())
         {
             if (!IsValidFieldSymbol(field))
                 continue;
@@ -51,7 +63,11 @@ internal sealed class TypeSymbolProcessor(INamedTypeSymbol typeSymbol, TypeDecla
                 "System.ReadOnlySpan<byte>" => BackingFieldType.Span,
                 "byte[]" => BackingFieldType.Span,
                 "byte*" => BackingFieldType.Pointer,
-                _ when field.Type.IsSupportedIntegralType() => BackingFieldType.Integral,
+
+                _ when field.Type.IsSupportedIntegralType() => IsInlineArray ? 
+                    BackingFieldType.InlineArray : 
+                    BackingFieldType.Integral,
+
                 _ => BackingFieldType.Invalid
             };
 
@@ -68,8 +84,8 @@ internal sealed class TypeSymbolProcessor(INamedTypeSymbol typeSymbol, TypeDecla
     {
         bool hasCompilationIssues = false;
 
-        if (DiagnosticValidator.IsNotPartial(context, typeDeclaration, typeSymbol.Name) |
-            DiagnosticValidator.IsNested(context, typeDeclaration, typeSymbol.Name))
+        if (DiagnosticValidator.IsNotPartial(context, TypeDeclaration, TypeSymbol.Name) |
+            DiagnosticValidator.IsNested(context, TypeDeclaration, TypeSymbol.Name))
             hasCompilationIssues = true;
 
         foreach (BitFieldModel field in _fields)
@@ -116,12 +132,24 @@ internal sealed class TypeSymbolProcessor(INamedTypeSymbol typeSymbol, TypeDecla
                 if (backingType == BackingFieldType.Integral)
                     bitField.FieldType = backingField.Type.SpecialType.ToBitFieldType();
 
+                // allow inline arrays to infer their type
+                if (backingType == BackingFieldType.InlineArray)
+                    bitField.FieldType ??= backingField.Type.SpecialType.ToBitFieldType();
+
                 // add to list of fields to generate
                 _fields.Add(bitField);
             }
 
             offset += bitField.BitCount;
         }
+    }
+
+    private bool HasInlineArrayAttribute()
+    {
+        return (int?)TypeSymbol
+            .GetAttributes()
+            .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == StringConstants.InlineArrayAttributeFullName)?
+            .ConstructorArguments[0].Value > 0;
     }
 
     private static bool IsValidFieldSymbol(IFieldSymbol member) => member is

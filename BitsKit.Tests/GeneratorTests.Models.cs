@@ -160,6 +160,21 @@ public readonly partial struct ReadOnlyStruct
     public readonly ulong BackingField01;
 }
 
+#if NET8_0_OR_GREATER
+
+[BitObject(BitOrder.LeastSignificant)]
+[InlineArray(2)]
+public partial struct InlineArrayStruct
+{
+    [BitField("Generated01", 2)]
+    [BitField("Generated02", 2)]
+    [BitField(27)]
+    [BitField("Generated03", 2)] // boundary straddled
+    public int BackingField00;
+}
+
+#endif
+
 [Flags]
 public enum TestEnum
 {

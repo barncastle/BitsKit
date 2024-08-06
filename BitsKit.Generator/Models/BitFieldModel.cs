@@ -69,7 +69,8 @@ internal abstract class BitFieldModel
                 BackingField.Name,
                 BitOffset,
                 BitCount,
-                BackingField.FixedSize);
+                BackingField.FixedSize,
+                BackingField.Type);
         }
 
         // setter
@@ -84,7 +85,8 @@ internal abstract class BitFieldModel
                 BackingField.Name,
                 BitOffset,
                 BitCount,
-                BackingField.FixedSize);
+                BackingField.FixedSize,
+                BackingField.Type);
         }
 
         sb.AppendIndentedLine(2, "}")
@@ -116,7 +118,8 @@ internal abstract class BitFieldModel
         {
             BackingFieldType.Integral or
             BackingFieldType.Memory or
-            BackingFieldType.Span => StringConstants.PropertyTemplate,
+            BackingFieldType.Span or
+            BackingFieldType.InlineArray => StringConstants.PropertyTemplate,
             BackingFieldType.Pointer => StringConstants.UnsafePropertyTemplate,
             _ => throw new NotSupportedException(),
         };
@@ -132,7 +135,8 @@ internal abstract class BitFieldModel
     /// {4} = IntegralName<br/>
     /// {5} = <see cref="BitOffset"/><br/> 
     /// {6} = <see cref="BitCount"/><br/>
-    /// {7} = <see cref="BackingField"/>.FixedSize
+    /// {7} = <see cref="BackingField"/>.FixedSize<br/>
+    /// {8} = <see cref="BackingField"/>.Type
     /// </para> 
     /// </summary>
     protected abstract string GetGetterTemplate();
@@ -147,7 +151,8 @@ internal abstract class BitFieldModel
     /// {4} = IntegralName<br/>
     /// {5} = <see cref="BitOffset"/><br/> 
     /// {6} = <see cref="BitCount"/><br/>
-    /// {7} = <see cref="BackingField"/>.FixedSize
+    /// {7} = <see cref="BackingField"/>.FixedSize<br/>
+    /// {8} = <see cref="BackingField"/>.Type
     /// </para> 
     /// </summary>
     protected abstract string GetSetterTemplate();
@@ -161,6 +166,7 @@ internal abstract class BitFieldModel
         BackingFieldType.Memory => "{4}.Span",
         BackingFieldType.Span => "{4}",
         BackingFieldType.Pointer => "MemoryMarshal.CreateReadOnlySpan(ref {4}[0], {7})",
+        BackingFieldType.InlineArray => "MemoryMarshal.Cast<{8}, byte>(this)",
         _ => throw new NotSupportedException()
     };
 
@@ -173,6 +179,7 @@ internal abstract class BitFieldModel
         BackingFieldType.Memory => "{4}.Span",
         BackingFieldType.Span => "{4}",
         BackingFieldType.Pointer => "MemoryMarshal.CreateSpan(ref {4}[0], {7})",
+        BackingFieldType.InlineArray => "MemoryMarshal.Cast<{8}, byte>(this)",
         _ => throw new NotSupportedException()
     };
 
@@ -197,6 +204,7 @@ internal abstract class BitFieldModel
     {
         return TypeSymbol.TypeDeclaration.IsStruct() &&
                BackingFieldType != BackingFieldType.Pointer &&
+               BackingFieldType != BackingFieldType.InlineArray &&
                !IsReadOnly();
     }
 }

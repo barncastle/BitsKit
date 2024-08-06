@@ -10,6 +10,8 @@ internal static class StringConstants
     public const string BooleanFieldAttributeFullName = "BitsKit.BitFields.BooleanFieldAttribute";
     public const string EnumFieldAttributeFullName = "BitsKit.BitFields.EnumFieldAttribute";
 
+    public const string InlineArrayAttributeFullName = "System.Runtime.CompilerServices.InlineArrayAttribute";
+
     /// <summary>
     /// Generated code header
     /// </summary>

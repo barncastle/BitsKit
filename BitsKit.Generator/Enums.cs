@@ -11,6 +11,7 @@ internal enum BackingFieldType
     Memory,
     Span,
     Pointer,
+    InlineArray,
 
     Invalid = 0xFF
 }

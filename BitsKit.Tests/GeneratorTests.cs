@@ -84,6 +84,19 @@ public class GeneratorTests
 
         Assert.AreEqual(enumObj.BackingField00, (uint)Expected, "EnumBitFieldStruct.BackingField00 != Expected");
         Assert.AreEqual(enumObj.BackingField01, 0u, "EnumBitFieldStruct.BackingField01 != 0");
+
+#if NET8_0_OR_GREATER
+        InlineArrayStruct inlineArrayObj = new()
+        {
+            Generated01 = 0b11,
+            Generated02 = 0b11,
+            // padding : 27
+            Generated03 = 0b11 // boundary straddling test
+        };
+
+        Assert.AreEqual((uint)inlineArrayObj[0], Expected | 0x80000000, "InlineArrayStruct[0] != (Expected | 0x80000000)");
+        Assert.AreEqual(inlineArrayObj[1], 1, "InlineArrayStruct[1] != 1");
+#endif
     }
 
     [TestMethod]
@@ -149,6 +162,15 @@ public class GeneratorTests
 
         Assert.AreEqual(enumObj.Generated01, TestEnum.B, "EnumBitFieldStruct.Generated01 != B");
         Assert.AreEqual(enumObj.Generated02, TestEnum.A | TestEnum.B, "EnumBitFieldStruct.Generated02 != (A | B)");
+
+#if NET8_0_OR_GREATER
+        InlineArrayStruct inlineArrayObj = new();
+        inlineArrayObj[0] = Input;
+
+        Assert.AreEqual(inlineArrayObj.Generated01, Expected01, "InlineArrayStruct.Generated01 != Expected01");
+        Assert.AreEqual(inlineArrayObj.Generated02, Expected02, "InlineArrayStruct.Generated02 != Expected02");
+        Assert.AreEqual(inlineArrayObj.Generated03, 0, "InlineArrayStruct.Generated03 != 0");
+#endif
     }
 
     [TestMethod]
@@ -708,6 +730,60 @@ public class GeneratorTests
 
         Assert.IsTrue(Helpers.StrEqualExWhiteSpace(sourceOutput, expected));
     }
+
+#if NET8_0_OR_GREATER
+
+    [TestMethod]
+    public void InlineArrayTest()
+    {
+        string source = @"
+        [BitObject(BitOrder.LeastSignificant)]
+        [InlineArray(length: 10)]
+        public partial struct BitFieldInlineArray
+        {
+            [BitField(""Generated00"", 2)]
+            [BitField(""Generated01"", 2, BitFieldType.Byte)]
+            [EnumField(""Generated02"", 2, typeof(BitsKit.Tests.TestEnum))]
+            [BooleanField(""Generated03"")]
+            public int BackingField00;
+        }
+        ";
+
+        string expected = @"
+        public partial struct  BitFieldInlineArray
+        {
+            public  Int32 Generated00 
+            {
+                 get => BitPrimitives.ReadInt32LSB(MemoryMarshal.Cast<int, byte>(this), 0, 2);
+                 set => BitPrimitives.WriteInt32LSB(MemoryMarshal.Cast<int, byte>(this), 0, value, 2);
+            }
+
+            public  Byte Generated01 
+            {
+                 get => BitPrimitives.ReadUInt8LSB(MemoryMarshal.Cast<int, byte>(this), 2, 2);
+                 set => BitPrimitives.WriteUInt8LSB(MemoryMarshal.Cast<int, byte>(this), 2, value, 2);
+            }
+
+            public  BitsKit.Tests.TestEnum Generated02 
+            {
+                 get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(MemoryMarshal.Cast<int, byte>(this), 4, 2);
+                 set => BitPrimitives.WriteInt32LSB(MemoryMarshal.Cast<int, byte>(this), 4, (Int32)value, 2);
+            }
+
+            public  System.Boolean Generated03 
+            {
+                 get => BitPrimitives.ReadBitLSB(MemoryMarshal.Cast<int, byte>(this), 6);
+                 set => BitPrimitives.WriteBitLSB(MemoryMarshal.Cast<int, byte>(this), 6, value);
+            }
+        }
+        ";
+
+        string? sourceOutput = GenerateSourceAndTest(source, new BitObjectGenerator());
+
+        Assert.IsTrue(Helpers.StrEqualExWhiteSpace(sourceOutput, expected));
+    }
+
+#endif
 
     private static string? GenerateSourceAndTest(string source, IIncrementalGenerator generator)
     {

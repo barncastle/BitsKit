@@ -21,6 +21,7 @@ public static class Helpers
     #pragma warning disable IDE0161 // Convert to file-scoped namespace
     
     using System;
+    using System.Runtime.CompilerServices;
     using BitsKit;
     using BitsKit.BitFields;
     ";
