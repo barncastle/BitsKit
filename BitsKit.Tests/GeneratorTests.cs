@@ -754,26 +754,26 @@ public class GeneratorTests
         {
             public  Int32 Generated00 
             {
-                 get => BitPrimitives.ReadInt32LSB(MemoryMarshal.Cast<int, byte>(this), 0, 2);
-                 set => BitPrimitives.WriteInt32LSB(MemoryMarshal.Cast<int, byte>(this), 0, value, 2);
+                 get => BitPrimitives.ReadInt32LSB(MemoryMarshal.AsBytes<int>(this), 0, 2);
+                 set => BitPrimitives.WriteInt32LSB(MemoryMarshal.AsBytes<int>(this), 0, value, 2);
             }
 
             public  Byte Generated01 
             {
-                 get => BitPrimitives.ReadUInt8LSB(MemoryMarshal.Cast<int, byte>(this), 2, 2);
-                 set => BitPrimitives.WriteUInt8LSB(MemoryMarshal.Cast<int, byte>(this), 2, value, 2);
+                 get => BitPrimitives.ReadUInt8LSB(MemoryMarshal.AsBytes<int>(this), 2, 2);
+                 set => BitPrimitives.WriteUInt8LSB(MemoryMarshal.AsBytes<int>(this), 2, value, 2);
             }
 
             public  BitsKit.Tests.TestEnum Generated02 
             {
-                 get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(MemoryMarshal.Cast<int, byte>(this), 4, 2);
-                 set => BitPrimitives.WriteInt32LSB(MemoryMarshal.Cast<int, byte>(this), 4, (Int32)value, 2);
+                 get => (BitsKit.Tests.TestEnum)BitPrimitives.ReadInt32LSB(MemoryMarshal.AsBytes<int>(this), 4, 2);
+                 set => BitPrimitives.WriteInt32LSB(MemoryMarshal.AsBytes<int>(this), 4, (Int32)value, 2);
             }
 
             public  System.Boolean Generated03 
             {
-                 get => BitPrimitives.ReadBitLSB(MemoryMarshal.Cast<int, byte>(this), 6);
-                 set => BitPrimitives.WriteBitLSB(MemoryMarshal.Cast<int, byte>(this), 6, value);
+                 get => BitPrimitives.ReadBitLSB(MemoryMarshal.AsBytes<int>(this), 6);
+                 set => BitPrimitives.WriteBitLSB(MemoryMarshal.AsBytes<int>(this), 6, value);
             }
         }
         ";
