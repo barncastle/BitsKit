@@ -57,6 +57,7 @@ Bit fields are declared using the `[BitFieldAttribute]` attribute which describe
 - If the backing field is an integral type, the bit-field will be of the same type. Type Casting is supported via `FieldType`.
 - If the backing field is a memory type, the `FieldType` is required as it cannot be inferred.
 - If the backing field is `readonly` or represents a readonly type, the bit-field will also be readonly.
+- Inline Arrays with an integral member type are supported.
 
 ```c#
 // Constructor for integral backed bit-fields
