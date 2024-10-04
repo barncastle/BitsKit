@@ -15,7 +15,7 @@ public sealed class BitReader : IBitReader, IBitArray
         set => _pos = value;
     }
 
-    /// <inheritdoc cref="MemoryBitWriter.Length"/>
+    /// <inheritdoc cref="IBitArray.Length"/>
     public int Length => _buffer.Length << 3;
 
     private readonly byte[] _buffer;
