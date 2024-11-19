@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Authors>barncastle</Authors>
     <Description>BitsKit is a library for efficient bit-level reading and writing also adding bit field support.</Description>
     <Copyright>Copyright © $([System.DateTime]::Now.ToString(yyyy)) barncastle</Copyright>
